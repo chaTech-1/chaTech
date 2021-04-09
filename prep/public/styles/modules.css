@@ -139,6 +139,71 @@
     background-color: rgba(29, 32, 37, 1);
   }
 
+/* chat room page */
+
+#chatroom-nav{
+  display: none;
+  background-color:var(--blue);
+  margin: 0.2rem;
+
+}
+
+#tbd{
+  display: none;
+  background-color:var(--purple) ;
+  margin: 0.2rem;
+}
+
+
+
+#chatroom-container{
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template : repeat(10,1fr);
+
+}
+
+#message-container{
+grid-area: 1 / 1 / span 9 ;
+overflow:  none;
+position:  relative;
+background-color:var(--purple) ;
+color: var(--green);
+font-size: 0.75rem;
+margin: 0.2rem;
+text-align: left;
+}
+
+#inner-message-container{
+  overflow:   auto;
+  position:   absolute;
+  bottom:     0;
+  max-height:100%;
+
+}
+
+  .retrieved-message{
+    margin-top: 3.5%;
+
+  }
+
+
+#send-message-container{
+  grid-area: 10 / 1;
+  background-color: rgb(221, 221, 221);
+  margin: 0.2rem;
+
+}
+
+
+
+
+
+
+
+
+
 /* Landscape Tablet and Desktop */
 @media screen and (min-width: 1024px) {
 
@@ -156,4 +221,34 @@
   }
 
   /* Dashboard Section */
+
+  
+  /* chat room */
+  #chatroom-container{
+    display: grid;
+    grid-template: 4fr 1fr / 1fr 4fr ;
+
+  }
+
+    #message-container{
+
+      grid-area: 1 / 2 ;
+      
+    }
+    #send-message-container{
+      grid-area: 2 / 2 ;
+
+    }
+    #chatroom-nav{
+      display: block;
+      grid-area:1 /1 ;
+      
+    }
+    #tbd{
+      display: block;
+      grid-area: 2 /1 ;
+     
+    }
+
+
 }

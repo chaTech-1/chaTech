@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../../public/styles/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <title>chaTech</title>
+</head>
+<body>
+
+  <header>
+    <!-- Logo -->
+    <h1><a href="/views/pages/index.html" id="nav-logo">chaTech;</a></h1>
+    <!-- Nav Links, Hidden By Default -->
+    <ul>
+      <li><a href="./admin/dashboard.html" class="nav-links">Admin</a></li>
+      <li><a href="#" class="nav-links">About</a></li>
+    </ul>
+    <!-- Burger Menu Button -->
+    <a href="javascript:void(0)" id="burger-menu"><i class="fa fa-bars"></i></a>
+
+    <!-- Burger Menu List -->
+    <section id="burger-menu-list" class="hide-burger-menu">
+      <ul>
+        <li><a href="./admin/dashboard.html" class="nav-links">Admin</a></li>
+        <li><a href="#" class="nav-links">About</a></li>
+      </ul>
+    </section> 
+  </header>
+
+  <main>
+ 
+    <section id="chatroom-container">
+
+      <section id="message-container">
+        <section id="inner-message-container">
+
+          <p class="retrieved-message">
+            <span class="retrieved-message-name">Ali-Mahmoud</span>
+            <span class="retrieved-message-body">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ratione dolore in nam? Dolores culpa, earum odio ea voluptatum distinctio ab rem provident a esse nam. </span>
+            <span class="retrieved-message-time">12:31</span>
+          </p>
+          <p class="retrieved-message">
+           <span class="retrieved-message-name">Ali-bakir</span>
+           <span class="retrieved-message-body">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ratione dolore in nam? Dolores culpa, earum odio ea voluptatum distinctio ab rem provident a esse nam. </span>
+           <span class="retrieved-message-time">12:32</span>
+         </p>
+         <p class="retrieved-message">
+           <span class="retrieved-message-name">Ali-Sartawi</span>
+           <span class="retrieved-message-body">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ratione dolore in nam? Dolores culpa, earum odio ea voluptatum distinctio ab rem provident a esse nam. </span>
+           <span class="retrieved-message-time">12:33</span>
+         </p>
+         <p class="retrieved-message">
+          <span class="retrieved-message-name">Ali-Sartawi</span>
+          <span class="retrieved-message-body">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ratione dolore in nam? Dolores culpa, earum odio ea voluptatum distinctio ab rem provident a esse nam. </span>
+          <span class="retrieved-message-time">12:34</span>
+        </p>
+        <p class="retrieved-message">
+          <span class="retrieved-message-name">Ali-Sartawi</span>
+          <span class="retrieved-message-body">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ratione dolore in nam? Dolores culpa, earum odio ea voluptatum distinctio ab rem provident a esse nam. </span>
+          <span class="retrieved-message-time">12:35</span>
+        </p>
+        <p class="retrieved-message">
+          <span class="retrieved-message-name">Ali-Sartawi</span>
+          <span class="retrieved-message-body">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ratione dolore in nam? Dolores culpa, earum odio ea voluptatum distinctio ab rem provident a esse nam. </span>
+          <span class="retrieved-message-time">12:36</span>
+        </p>
+
+        </section>
+      </section>
+
+      <section id="send-message-container">
+
+        <form action="" method="post" id="input-message-form" >
+
+          <input type="text"  id="input-message" name="input-message" placeholder="type a message ..." required autocomplete="off"  >
+          <button type="submit">send</button>
+
+        </form>
+        
+      </section>
+
+
+      <section id="chatroom-nav">
+        <p>chat room nav</p>
+
+      </section>
+
+      <section id="tbd">
+        <p>TBD</p>
+      </section>
+
+    </section>
+
+
+
+
+
+
+
+  </main>
+
+  <footer>
+    <p>&copy; 2021 chaTech;</p>
+  </footer>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script>
+    $('#burger-menu').click(function() {
+      $('#burger-menu-list').toggleClass('hide-burger-menu');
+    });
+  </script>
+</body>
+</html>

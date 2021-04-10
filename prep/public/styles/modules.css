@@ -96,7 +96,7 @@
   #add-chatroom-form ::placeholder {
     color: var(--blue);
   }
-  .chatroom {
+  .chatroom-dashboard {
     padding: 0.5rem;
     margin-bottom: 0.5rem;
     text-align: center;
@@ -107,23 +107,24 @@
     border: solid 0.15rem var(--blue);
 
     display: grid;
-    grid-template: 1fr 1fr / repeat(2, 1fr);
+    grid-template: 1fr 1fr / repeat(4, 1fr);
+    gap: 0.5rem;
     align-items: center;
     justify-items: center;
   }
-  .chatroom-name {
-    grid-area: 1 / 1 / span 1 / span 2;
+  .chatroom-name-dashboard {
+    grid-area: 1 / 1 / span 2 / span 3;
   }
   .edit-chatroom-form {
-    grid-area: 2 / 1;
+    grid-area: 1 / 4;
   }
   .delete-chatroom-form {
-    grid-area: 2 / 2;
+    grid-area: 2 / 4;
   }
   .edit-chatroom-form button,
   .delete-chatroom-form button {
     padding: 0.2rem;
-    /* margin-bottom: 0.1rem; */
+    width: 4rem;
     text-align: center;
     font-family: vt323;
     font-size: 1rem;
@@ -139,70 +140,99 @@
     background-color: rgba(29, 32, 37, 1);
   }
 
-/* chat room page */
-
-#chatroom-nav{
+/* Chatroom Page */
+#chatroom-nav {
   display: none;
-  background-color:var(--blue);
-  margin: 0.2rem;
-
 }
 
-#tbd{
+#tbd {
   display: none;
-  background-color:var(--purple) ;
-  margin: 0.2rem;
 }
 
-
-
-#chatroom-container{
+#chatroom-container {
   width: 100%;
   height: 100%;
   display: grid;
   grid-template : repeat(10,1fr);
-
 }
 
-#message-container{
-grid-area: 1 / 1 / span 9 ;
-overflow:  none;
-position:  relative;
-background-color:var(--purple) ;
-color: var(--green);
-font-size: 0.75rem;
-margin: 0.2rem;
-text-align: left;
+#message-container {
+  grid-area: 1 / 1 / span 9 ;
+  overflow:  none;
+  position:  relative;
+  background-color:var(--less-dark) ;
+  color: var(--blue);
+  font-size: 0.75rem;
+  margin: 0.1rem;
+  margin-top: 0.2rem;
+  text-align: left;
+
+  font-family:monospace;
 }
 
-#inner-message-container{
-  overflow:   auto;
-  position:   absolute;
-  bottom:     0;
-  max-height:100%;
-
+#inner-message-container {
+  overflow: auto;
+  position: absolute;
+  bottom: 0;
+  max-height: 100%;
 }
 
-  .retrieved-message{
-    margin-top: 3.5%;
-
+  .retrieved-message {
+    line-height: normal;
+    padding: 0.3rem;
   }
+    .retrieved-message-name {
+      padding: 0.1rem;
+      font-size: 0.65rem;
+      background-color: var(--darker);
+    }
+    .retrieved-message-body {
+      font-size: 0.6rem;
+    }
+    .retrieved-message-time {
+      color: var(--blue);
+      background-color: var(--dark);
+      font-size: 0.55rem;
+    }
 
-
-#send-message-container{
+#send-message-container {
   grid-area: 10 / 1;
-  background-color: rgb(221, 221, 221);
-  margin: 0.2rem;
-
+  background-color: var(--darker);
+  margin: 0.1rem;
+  margin-bottom: 0.2rem;
 }
-
-
-
-
-
-
-
-
+  #send-message-container form {
+    height: 100%;
+    display: grid;
+    grid-template: 1fr / 15fr 1fr;
+  }
+    #send-message-container textarea {
+      grid-area: 1 / 1;
+      background-color: var(--darker);
+      padding: 0.5rem;
+      resize: none;
+      border: none;
+      font-size: 0.7rem;
+      color: var(--blue);
+    }
+      #send-message-container textarea:focus {
+        outline: none;
+      }
+    #send-message-container button {
+      padding: 0.5rem;
+      text-align: center;
+      font-family: vt323;
+      font-size: 1rem;
+      color: var(--blue);
+      background-color: rgba(29, 32, 37, 0.5);
+      border: solid 0.15rem var(--blue);
+    }
+      #send-message-container button:focus,
+      #send-message-container button:hover {
+        cursor: pointer;
+        outline: none;
+        background-color: rgba(29, 32, 37, 1);
+      }
 
 /* Landscape Tablet and Desktop */
 @media screen and (min-width: 1024px) {
@@ -221,33 +251,53 @@ text-align: left;
   }
 
   /* Dashboard Section */
-
+  #manage-chatrooms {
+    width: 50%;
+  }
   
   /* chat room */
-  #chatroom-container{
+  #chatroom-container {
     display: grid;
     grid-template: 4fr 1fr / 1fr 4fr ;
-
   }
-
-    #message-container{
-
-      grid-area: 1 / 2 ;
-      
+    #message-container {
+      grid-area: 1 / 2;
     }
-    #send-message-container{
-      grid-area: 2 / 2 ;
-
+    #send-message-container {
+      grid-area: 2 / 2;
     }
-    #chatroom-nav{
+    #chatroom-nav {
       display: block;
-      grid-area:1 /1 ;
-      
+      grid-area: 1 / 1;
+
+      background-color:var(--blue);
+      margin: 0.1rem;
+      margin-top: 0.2rem;
+      overflow: auto;
+      text-align: left;
     }
-    #tbd{
+      #chatroom-nav-header {
+        background-color: var(--blue);
+        color: var(--dark);
+        padding: 1rem;
+        text-align: center;
+      }
+      .chatroom-name {
+        padding: 0.5rem;
+      }
+      .chatroom-name:nth-child(odd) {
+        background-color: var(--less-dark);
+      }
+      .chatroom-name:nth-child(even) {
+        background-color: var(--darker);
+      }
+    #tbd {
       display: block;
-      grid-area: 2 /1 ;
-     
+      grid-area: 2 / 1;
+
+      background-color:var(--purple) ;
+      margin: 0.1rem;
+      margin-bottom: 0.2rem;
     }
 
 

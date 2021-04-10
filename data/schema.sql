@@ -9,6 +9,7 @@ admin_id SERIAL PRIMARY KEY,
 name VARCHAR(225),
 password VARCHAR(225));
 
+
 CREATE TABLE rooms(
 room_id SERIAL PRIMARY KEY,
 name VARCHAR(225),

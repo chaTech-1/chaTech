@@ -1,0 +1,27 @@
+{
+  "name": "chatech",
+  "version": "1.0.0",
+  "description": "A free live chat application that easily connects users with new people in the tech field, through public chat rooms. People can either give or take free consultations, or collaborate with each other.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chaTech-1/chaTech.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chaTech-1/chaTech/issues"
+  },
+  "homepage": "https://github.com/chaTech-1/chaTech#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "pg": "^8.5.1",
+    "superagent": "^6.1.0"
+  }
+}

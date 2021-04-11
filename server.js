@@ -87,26 +87,33 @@ function handlerSignin(request, response) {
     }else{
         response.render('../views/admin/sign-in',{massage:'incorrect'});
     }
-    
 }
+
 
 // Dashboard
 
 function renderDashboard(request, response) {
-    response.render('../views/admin/dashboard')
+    const sqlQuery="SELECT * FROM rooms"
+    client.query(sqlQuery).then(data=>{
+         const list = data.rows;
+         
+         response.render('../views/admin/dashboard',{ list: list });
+    }).catch(error=>{
+         errorHandler(error, response)
+    });
+    
 }
 
 // Add a chat room 
 function addRoomToDashboard(request, response) {
-    const sqlQuery =`INSERT INTO rooms (name,adminid) VALUES($1,1)`;
+    const sqlQuery =`INSERT INTO rooms (name,admin_id) VALUES($1,1)`;
     const safValues = [request.body.chatroom];
     client.query(sqlQuery,safValues).then(massage=>{
-        response.render('../views/test', { key: 'pass' });
+        response.redirect('/dashboard');
     }).catch((error)=>{
-        response.render('../views/test', { key: error });
+        errorHandler(error, response)
     });
-    
-    
+ 
 }
 // Edit a chat room
 function editRoomInDashboard(request, response) {
@@ -114,7 +121,9 @@ function editRoomInDashboard(request, response) {
 }
 // Delete a chat room 
 function deleteRoomFromDashboard(request, response) {
-
+    const sqlQuery="";
+    const safeValues = [request.body.room_id];
+    res.status.send(request.body.room_id);
 }
 
 // Chat Room 

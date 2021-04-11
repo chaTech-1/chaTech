@@ -4,12 +4,12 @@
 
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors')
-const superagent = require('superagent')
+const cors = require('cors');
+const superagent = require('superagent');
 const pg = require('pg');
 const { response } = require('express');
 const methodoverride = require('method-override');
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
 
 // io
 // bycrypt
@@ -40,8 +40,8 @@ app.get('/signin', renderSignin)
 app.post('/signin', handlerSignin);
 app.get('/dashboard', renderDashboard);
 app.post('/dashboard', addRoomToDashboard);
-app.put('/dashboard', editRoomInDashboard);
-app.delete('/dashboard', deleteRoomFromDashboard);
+app.put('/dashboard/:roomid', editRoomInDashboard);
+app.delete('/dashboard/:roomid', deleteRoomFromDashboard);
 app.get('/chatrooms', renderChatRoom);
 
 
@@ -93,15 +93,15 @@ function handlerSignin(request, response) {
 // Dashboard
 
 function renderDashboard(request, response) {
-    const sqlQuery="SELECT * FROM rooms"
-    client.query(sqlQuery).then(data=>{
-         const list = data.rows;
-         
-         response.render('../views/admin/dashboard',{ list: list });
-    }).catch(error=>{
-         errorHandler(error, response)
-    });
-    
+  const sqlQuery= 'SELECT * FROM rooms ORDER BY roomid DESC;';
+  client.query(sqlQuery).then(data=>{
+    const list = data.rows;
+    console.log(list);
+    response.render('../views/admin/dashboard',{ list: list });
+  }).catch(error=>{
+    errorHandler(error, response);
+  });
+  
 }
 
 // Add a chat room 
@@ -117,13 +117,30 @@ function addRoomToDashboard(request, response) {
 }
 // Edit a chat room
 function editRoomInDashboard(request, response) {
+  const roomid = request.params.roomid;
+  const newName = request.body.name;
+  const safeValues = [newName, roomid];
+  const sqlQuery = `UPDATE rooms SET name=$1 WHERE roomid=$2;`;
 
+  client.query(sqlQuery, safeValues).then(() => {
+    response.redirect('/dashboard');
+  }).catch(error => {
+    errorHandler(error, response);
+  });
 }
+
 // Delete a chat room 
 function deleteRoomFromDashboard(request, response) {
-    const sqlQuery="";
-    const safeValues = [request.body.room_id];
-    res.status.send(request.body.room_id);
+  const roomid = request.params.roomid;
+  console.log(roomid);
+  const sqlQuery="DELETE FROM rooms WHERE roomid=$1";
+  const safeValues = [roomid];
+
+  client.query(sqlQuery, safeValues).then(() => {
+    response.redirect('/dashboard');
+  }).catch(error => {
+    errorHandler(error, response);
+  });
 }
 
 // Chat Room 

@@ -142,6 +142,10 @@
     outline: none;
     background-color: rgba(29, 32, 37, 1);
   }
+  /* edit-chatroom-form-box */
+  .edit-chatroom-form-box {
+    visibility: hidden;
+  }
 
 /* Chatroom Page */
 #chatroom-nav {

@@ -11,6 +11,7 @@ const { response } = require('express');
 const methodoverride = require('method-override');
 const bcrypt = require('bcrypt');
 
+
 // io
 // bycrypt
 
@@ -70,30 +71,44 @@ function test_fun(req, res) {
 // ***********************************************
 
 function handlerSignin(request, response) {
+    const correctPass ='$2b$10$OUI.lZJoD3qNYyot6Nxku.ZSIItP9P5KPtrEf.KcAiDG1XqYvRYKG'
+    // const safeValues = request.body.username;
+    // const sqlQuery = `SELECT FROM admins WHERE name=$1`;
 
-    const myPlaintextPassword=request.body.password;
-    const userName = request.body.username;
-    const hash =10;
-    const encrypted = 'admin';
-    
-    if(userName==='admin'){
-        bcrypt.compare(myPlaintextPassword, hash, function() {
-            if(myPlaintextPassword===encrypted){
-                response.redirect('/dashboard');
-            }else{
-                response.render('../views/admin/sign-in',{massage:'incorrect'});
-            }
-        })
-    }else{
+    // client.query(sqlQuery,safeValues).then(result => {
+    //     correctPass = result.rows[0].password
+    // })
+// const correctPass = 'admin';
+
+    const enteredPassword=request.body.password;
+    // const userName = request.body.username;
+    // const salt =10;
+//     let hash = bcrypt.hashSync(correctPass, 10);
+//     console.log(correctPass)
+// console.log(hash)
+    if (bcrypt.compareSync(enteredPassword, correctPass)) {
+        console.log(1)
+        response.redirect('/dashboard');
+       } else {
         response.render('../views/admin/sign-in',{massage:'incorrect'});
-    }
-}
+       }
+    // bcrypt.hash(myPlaintextPassword, salt).then(encrypted=>{
+    //     bcrypt.compare(myPlaintextPassword, encrypted, function(error, result) {
+    //         if (result === 'true') {
+    //             response.redirect('/dashboard');
+    //         }
+    // })
+    
+ 
+//         // response.render('../views/admin/sign-in',{massage:'incorrect'});
+//         // response.render('../views/admin/sign-in',{massage:'incorrect'})
+ }
 
 
 // Dashboard
 
 function renderDashboard(request, response) {
-  const sqlQuery= 'SELECT * FROM rooms ORDER BY roomid DESC;';
+  const sqlQuery= `SELECT * FROM rooms ORDER BY roomid DESC;`;
   client.query(sqlQuery).then(data=>{
     const list = data.rows;
     console.log(list);
@@ -106,7 +121,7 @@ function renderDashboard(request, response) {
 
 // Add a chat room 
 function addRoomToDashboard(request, response) {
-    const sqlQuery =`INSERT INTO rooms (name,admin_id) VALUES($1,1)`;
+    const sqlQuery =`INSERT INTO rooms(name,adminid) VALUES($1,1)`;
     const safValues = [request.body.chatroom];
     client.query(sqlQuery,safValues).then(massage=>{
         response.redirect('/dashboard');

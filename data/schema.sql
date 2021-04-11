@@ -13,7 +13,7 @@ password VARCHAR(225));
 CREATE TABLE rooms(
 roomid SERIAL PRIMARY KEY,
 name VARCHAR(225),
-admin_id int,
+admin_id INT,
 FOREIGN KEY (admin_id) REFERENCES admins(adminid)
 );
 
@@ -27,10 +27,10 @@ email VARCHAR(225)
 
 CREATE TABLE messages(
 messageid SERIAL PRIMARY KEY,
-time DATETIME,
+time TIMESTAMP,
 messagebody TEXT,
-rooid INT,
-roomid FOREIGN KEY REFERENCES rooms(roomid),
+roomid INT,
+FOREIGN KEY (roomid) REFERENCES rooms(roomid),
 participantid INT,
-participantid FOREIGN KEY REFERENCES participants(participantid)
+FOREIGN KEY (participantid) REFERENCES participants(participantid)
 );

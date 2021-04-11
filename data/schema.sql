@@ -13,8 +13,8 @@ password VARCHAR(225));
 CREATE TABLE rooms(
 roomid SERIAL PRIMARY KEY,
 name VARCHAR(225),
-admin_id INT,
-FOREIGN KEY (admin_id) REFERENCES admins(adminid)
+adminid INT,
+FOREIGN KEY (adminid) REFERENCES admins(adminid)
 );
 
 

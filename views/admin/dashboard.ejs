@@ -15,29 +15,31 @@
         <section id="dashboard">
             <section id="manage-chatrooms">
                 <p id="dashboard-header">Chatroom Dashboard</p>
-                <form id="add-chatroom-form" action="/newchatroom" method="post">
-                    <input type="text" name="add-chatroom" id="add-chatroom" placeholder="New Chatroom Name" required autocomplete="off">
+                <form id="add-chatroom-form" action="/dashboard" method="post">
+                    <input type="text" name="chatroom" id="add-chatroom" placeholder="New Chatroom Name" required autocomplete="off">
                     <button type="submit">ADD</button>
                 </form>
                 <!-- Previous Chatrooms Section -->
-                <section class="chatroom-dashboard">
-                    <p class="chatroom-name-dashboard">JavaScript;</p>
-                    <form class="edit-chatroom-form" action="#" method="post">
-                        <button type="submit">EDIT</button>
-                    </form>
-                    <form class="delete-chatroom-form" action="#" method="post">
-                        <button type="submit">DELETE</button>
-                    </form>
-                </section>
-                <section class="chatroom-dashboard">
-                    <p class="chatroom-name-dashboard">Python jflsdkjf skvnmlskdfj ksdlvmsldfg lvlskdjf v</p>
-                    <form class="edit-chatroom-form" action="#" method="post">
-                        <button type="submit">EDIT</button>
-                    </form>
-                    <form class="delete-chatroom-form" action="#" method="post">
-                        <button type="submit">DELETE</button>
-                    </form>
-                </section>
+
+                <% list.forEach(element=>{ %>
+                    <section class="chatroom-dashboard">
+                        <p class="chatroom-name-dashboard"><%= element.name %></p>
+                        <!-- <form class="edit-chatroom-form">
+                        </form> -->
+                        <button class="edit-chatroom-form" type="submit">EDIT</button>
+                        <form class="edit-chatroom-form-box" action="/dashboard/<%= element.roomid %>?_method=PUT" method="post">
+                          <input type="text" name="name" value="<%= element.name %>">
+                          <button type="submit">CONFIRM</button>
+                        </form>
+                        <form class="delete-chatroom-form" action="/dashboard/<%= element.roomid %>?_method=DELETE" method="post">
+                            <input type="hidden" name="roomid" value="<%= element.roomid %>">
+                            <button type="submit">DELETE</button>
+                        </form>
+                    </section>
+                <% }) %> 
+
+              
+              
 
             </section>
         </section>
@@ -52,6 +54,9 @@
         $('#burger-menu').click(function() {
             $('#burger-menu-list').toggleClass('hide-burger-menu');
         });
+        $('.edit-chatroom-form').click(function() {
+          $(this).next().toggleClass('edit-chatroom-form-box');
+        })
     </script>
 
 </body>

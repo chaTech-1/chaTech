@@ -45,8 +45,6 @@ app.delete('/dashboard', deleteRoomFromDashboard);
 app.get('/chatrooms', renderChatRoom);
 
 
-
-
 // Call-Back Functions
 
 function renderhome(request, response) {
@@ -90,19 +88,6 @@ function handlerSignin(request, response) {
         response.render('../views/admin/sign-in',{massage:'incorrect'});
     }
     
-    // bcrypt.compare(someOtherPlaintextPassword, hash, function(err, result) {
-    //     // result == false
-    // });
-
-    // bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
-    //     // Store hash in your password DB.
-    // });
-    /*
-   .then(function () {
-        response.redirect('/dashboard');
-    }).catch((error) => {
-        errorHandler(error, response)
-    })*/
 }
 
 // Dashboard
@@ -113,7 +98,15 @@ function renderDashboard(request, response) {
 
 // Add a chat room 
 function addRoomToDashboard(request, response) {
-
+    const sqlQuery =`INSERT INTO rooms (name,adminid) VALUES($1,1)`;
+    const safValues = [request.body.chatroom];
+    client.query(sqlQuery,safValues).then(massage=>{
+        response.render('../views/test', { key: 'pass' });
+    }).catch((error)=>{
+        response.render('../views/test', { key: error });
+    });
+    
+    
 }
 // Edit a chat room
 function editRoomInDashboard(request, response) {

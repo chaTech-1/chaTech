@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/chaTech-1/chaTech#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
+    "bookshelf-bcryptjs": "^1.0.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.6",

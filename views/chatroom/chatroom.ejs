@@ -51,9 +51,11 @@
                 </section>
             </section>
             <section id="send-message-container">
-                <form action="/sendmessage" method="post" id="input-message-form">
+                <form action='/chatrooms/<%= roomid %>/<%= participantid %>'method="post" id="input-message-form">
+<input type="hidden" value='<%= participantid%>'>
+<input type="hidden" value='<%= roomid%>'>
                     <!-- <input type="text"  id="input-message" name="input-message" placeholder="type a message ..." required autocomplete="off"> -->
-                    <textarea name="input-message" id="input-message" placeholder="Type here baleez..." required autocomplete="off"></textarea>
+                    <textarea name="message" id="message" placeholder="Type here baleez..." required autocomplete="off"></textarea>
                     <button type="submit">send</button>
                 </form>
             </section>

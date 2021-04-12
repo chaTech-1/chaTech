@@ -27,7 +27,7 @@ email VARCHAR(225)
 
 CREATE TABLE messages(
 messageid SERIAL PRIMARY KEY,
-time TIMESTAMP,
+time TIMESTAMP NOT NULL DEFAULT now(),
 messagebody TEXT,
 roomid INT,
 FOREIGN KEY (roomid) REFERENCES rooms(roomid),

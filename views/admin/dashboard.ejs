@@ -20,15 +20,15 @@
                     <button type="submit">ADD</button>
                 </form>
                 <!-- Previous Chatrooms Section -->
-
+                <section id="previous-chatrooms-dashboard">
                 <% list.forEach(element=>{ %>
                     <section class="chatroom-dashboard">
                         <p class="chatroom-name-dashboard"><%= element.name %></p>
                         <!-- <form class="edit-chatroom-form">
                         </form> -->
                         <button class="edit-chatroom-form" type="submit">EDIT</button>
-                        <form class="edit-chatroom-form-box" action="/dashboard/<%= element.roomid %>?_method=PUT" method="post">
-                          <input type="text" name="name" value="<%= element.name %>">
+                        <form class="edit-chatroom-form-hidden edit-chatroom-form-fixed" action="/dashboard/<%= element.roomid %>?_method=PUT" method="post">
+                          <input type="text" name="name" value="<%= element.name %>" required autocomplete="off">
                           <button type="submit">CONFIRM</button>
                         </form>
                         <form class="delete-chatroom-form" action="/dashboard/<%= element.roomid %>?_method=DELETE" method="post">
@@ -37,10 +37,7 @@
                         </form>
                     </section>
                 <% }) %> 
-
-              
-              
-
+                </section>
             </section>
         </section>
     </main>
@@ -55,7 +52,8 @@
             $('#burger-menu-list').toggleClass('hide-burger-menu');
         });
         $('.edit-chatroom-form').click(function() {
-          $(this).next().toggleClass('edit-chatroom-form-box');
+          $(this).next().toggleClass('edit-chatroom-form-hidden');
+          $(this).prev().toggleClass('edit-chatroom-form-hidden');
         })
     </script>
 

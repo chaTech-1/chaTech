@@ -47,7 +47,45 @@
     background-color: rgba(29, 32, 37, 1);
   }
   #hero-form ::placeholder {
+    /* color: var(--blue); */
+  }
+
+/* Dashboard Sign-In */
+#signin-section {
+  color: var(--blue);
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+  #signin-header {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  #signin-form input {
+    width: 6rem;
+  }
+  #signin-form input,
+  #signin-form button {
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    font-family: vt323;
+    font-size: 1rem;
     color: var(--blue);
+    background-color: rgba(29, 32, 37, 0.5);
+    border: solid 0.15rem var(--blue);
+  }
+  #signin-form input:focus,
+  #signin-form input:hover,
+  #signin-form button:focus,
+  #signin-form button:hover {
+    outline: none;
+    background-color: rgba(29, 32, 37, 1);
+  }
+  #signin-form ::placeholder {
+    /* color: var(--blue); */
   }
 
 /* Dashboard Section (Admin) */
@@ -67,13 +105,19 @@
   text-align: center;
   position: absolute;
   width: 75%;
-  height: 80%;
-  padding: 1rem;
-  overflow: auto;
+  height: 90%;
+  
+  /* overflow: auto; */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
+  #previous-chatrooms-dashboard {
+    width: 100%;
+    height: 80%;
+    padding: 1rem;
+    overflow: auto;
+  }
   #dashboard-header {
     font-size: 1rem;
     margin-bottom: 1rem;
@@ -97,7 +141,7 @@
     background-color: rgba(29, 32, 37, 1);
   }
   #add-chatroom-form ::placeholder {
-    color: var(--blue);
+    /* color: var(--blue); */
   }
   .chatroom-dashboard {
     padding: 0.5rem;
@@ -124,7 +168,7 @@
   .delete-chatroom-form {
     grid-area: 2 / 4;
   }
-  .edit-chatroom-form button,
+  .edit-chatroom-form,
   .delete-chatroom-form button {
     padding: 0.2rem;
     width: 4rem;
@@ -135,17 +179,43 @@
     background-color: rgba(29, 32, 37, 0.5);
     border: solid 0.15rem var(--blue);
   }
-  .edit-chatroom-form button:focus,
-  .edit-chatroom-form button:hover,
+  .edit-chatroom-form:focus,
+  .edit-chatroom-form:hover,
   .delete-chatroom-form button:focus,
   .delete-chatroom-form button:hover {
     outline: none;
     background-color: rgba(29, 32, 37, 1);
   }
   /* edit-chatroom-form-box */
-  .edit-chatroom-form-box {
-    visibility: hidden;
+  .edit-chatroom-form-hidden {
+    display: none;
   }
+  .edit-chatroom-form-fixed {
+    grid-area: 1 / 1 / span 2 / span 3;
+  }
+    .edit-chatroom-form-fixed input,
+    .edit-chatroom-form-fixed button {
+      padding: 0.2rem;
+      width: 4rem;
+      text-align: center;
+      font-family: vt323;
+      font-size: 1rem;
+      color: var(--blue);
+      background-color: rgba(29, 32, 37, 0.5);
+      border: solid 0.15rem var(--blue);
+    }
+    .edit-chatroom-form-fixed input {
+      width: 4rem;
+      margin-bottom: 0.5rem;
+    }
+    .edit-chatroom-form-fixed input:focus,
+    .edit-chatroom-form-fixed input:hover,
+    .edit-chatroom-form-fixed button:focus,
+    .edit-chatroom-form-fixed button:hover {
+      outline: none;
+      background-color: rgba(29, 32, 37, 1);
+    }
+    
 
 /* Chatroom Page */
 #chatroom-nav {
@@ -257,9 +327,17 @@
     flex: 50%;
   }
 
+  /* Dashboard Sign-In */
+  #signin-form input {
+    width: 10rem;
+  }
   /* Dashboard Section */
   #manage-chatrooms {
     width: 50%;
+  }
+  /* Dashboard Edit Chatroom */
+  .edit-chatroom-form-fixed input {
+    width: 8rem;
   }
   
   /* chat room */

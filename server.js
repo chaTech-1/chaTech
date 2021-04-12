@@ -44,12 +44,18 @@ app.post('/dashboard', addRoomToDashboard);
 app.put('/dashboard/:roomid', editRoomInDashboard);
 app.delete('/dashboard/:roomid', deleteRoomFromDashboard);
 app.get('/chatrooms', renderChatRoom);
+app.get('/about', renderAbout);
 
 
 // Call-Back Functions
 
 function renderhome(request, response) {
     response.render('../views/index')
+}
+
+//About
+function renderAbout (request, response) {
+  response.render('../views/aboutus');
 }
 
 //Sign-In - Admin

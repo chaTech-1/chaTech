@@ -10,17 +10,44 @@ const pg = require('pg');
 const { response } = require('express');
 const methodoverride = require('method-override');
 const bcrypt = require('bcrypt');
-// const server = require("http").createServer(app);
-// const socket_io = require('socket.io')(server, {
-//   cors: {
-//      origin: "http://localhost:3001",
-//      methods: ["GET", "POST"],
-//   },
-// });
 
+// body parser - 
+// const { emit } = require("process");
+// const bodyParser = require('body-parser')
+// app.use(bodyParser.json())
+// app.use(
+//   bodyParser.urlencoded({
+//     extended: true,
+//   })
+// )
 // App Set-Up
 const app = express();
 app.use(cors());
+// Database
+const DATABASE_URL = process.env.DATABASE_URL;
+const client = new pg.Client(DATABASE_URL);
+
+// pool
+const Pool = require("pg").Pool;
+const pool = new pg.Pool({
+  user: "aseelalzweri",
+  host: "localhost",
+  database: "chatapp",
+  password: "SoftDev5060*",
+  port: 5432,
+});
+
+// socket-io
+
+const server = require("http").createServer(app);
+const socket_io = require('socket.io')(server, {
+  cors: {
+     origin: "http://localhost:3000",
+     methods: ["GET", "POST"],
+  },
+});
+
+
 
 // Environmental Variables
 const PORT = process.env.PORT || 3000;
@@ -32,25 +59,92 @@ app.use(express.static('./public'));
 app.set('view engine', 'ejs');
 app.use(methodoverride('_method'));
 
-// Database
-const DATABASE_URL = process.env.DATABASE_URL;
-const client = new pg.Client(DATABASE_URL);
-
 
 // endpoints
 app.get('/', renderhome);
-app.post('/', participantInfoHandler)
+// app.post('/', participantInfoHandler)
 app.get('/signin', renderSignin)
 app.post('/signin', handlerSignin);
 app.get('/dashboard', renderDashboard);
 app.post('/dashboard', addRoomToDashboard);
 app.put('/dashboard/:roomid', editRoomInDashboard);
 app.delete('/dashboard/:roomid', deleteRoomFromDashboard);
-app.get('/chatrooms', renderChatRoom);
+app.get('/chatrooms/:roomid/:participantid', renderChatRoom);
+app.post('/', saveParticipantInfo);
 app.get('/about', renderAbout);
+app.post('/chatrooms/:roomid/:participantid', sendMSG);
+// app.get('/chatrooms/:participantid/:roomid',receiveMSG);
 
 
 // Call-Back Functions
+
+// Messages
+
+// send message using client
+
+// function sendMSG(request,response) {
+// const roomId =  request.params.roomid;
+// const participantId =  request.params.participantid;
+// const messageBody = request.body.message;
+// // RETURNING messageid,time
+// const sqlQuery = `INSERT INTO messages( messagebody, roomid, participantid) VALUES($1, $2, $3) RETURNING messageid,time,messagebody,participantid;`
+// const safeValues = [messageBody,roomId,participantId]
+// console.log(safeValues)
+// client.query(sqlQuery,safeValues).then( (result)=> {
+//   console.log(result.rows)
+//  response.status(201).send(result.rows);
+//  })
+// }
+
+// send message using pool
+
+function sendMSG(request,response) {
+  const roomId =  request.params.roomid;
+  const participantId =  request.params.participantid;
+  const messageBody = request.body.message;
+  // const sqlQuery = `INSERT INTO messages( messagebody, roomid, participantid) VALUES($1, $2, $3) RETURNING messageid,time,messagebody,participantid AS table1 SELECT participants.name, messagebody.table1, time.table1 FROM table1 INNER JOIN participants ON participantid.table1=participantid.participants;`
+
+  const sqlQuery1 = `INSERT INTO messages( messagebody, roomid, participantid) VALUES($1, $2, $3) RETURNING messageid,time,messagebody,participantid,name;`
+
+  // const sqlQuery2 = `SELECT messages.messagebody,messages.time, participants.name FROM participants,messages WHERE participants.participantid=$1 AND messages.participantid=$1 ORDER BY messageid DESC LIMIT 1`
+  const safeValues = [messageBody,roomId,participantId];
+  // const selectQuery = `Select messagebody.messages, time.messages, name.participants FROM messages INNER JOIN participants ON messages.participantid= participants.participantid;`
+
+  console.log(safeValues)
+  pool.query(sqlQuery1,safeValues).then((result)=> {
+     console.log(result.rows);
+     response.status(201).send(result.rows)})
+  // .then((result)=> {
+  //   console.log(result.rows)
+  //  response.status(201).send(result.rows);
+  //  })
+  }
+
+
+// function receiveMSG(request,response) {
+
+// }
+
+function saveParticipantInfo(request,response) {
+  const name = request.body.name;
+  const password = request.body.password;
+  const sqlQuery = `INSERT INTO participants(name,email) VALUES($1, $2) RETURNING participantid`
+  const safeValues = [name,password]
+client.query(sqlQuery,safeValues).then(
+   (result) => {
+    const id= result.rows[0].participantid;
+    console.log(id);
+    response.redirect(`/chatrooms/1/${id}`)
+  }
+)
+}
+
+
+
+
+
+
+
 
 function renderhome(request, response) {
     response.render('../views/index')
@@ -81,13 +175,13 @@ function test_fun(req, res) {
 
 function handlerSignin(request, response) {
     const correctPass ='$2b$10$OUI.lZJoD3qNYyot6Nxku.ZSIItP9P5KPtrEf.KcAiDG1XqYvRYKG'
-    const safeValues = request.body.username;
-    const sqlQuery = `SELECT password FROM admins WHERE name=$1`;
+    // const safeValues = request.body.username;
+    // const sqlQuery = `SELECT password FROM admins WHERE name=$1`;
 
-    client.query(sqlQuery,safeValues).then(result => {
-        correctPass1 = result.rows[0].password;
-        console.log(correctPass1)
-    })
+    // client.query(sqlQuery,safeValues).then(result => {
+    //     correctPass1 = result.rows[0].password;
+    //     console.log(correctPass1)
+    // })
 // const correctPass = 'admin';
 
     const enteredPassword=request.body.password;
@@ -162,22 +256,24 @@ function deleteRoomFromDashboard(request, response) {
 // Chat Room 
 
 function renderChatRoom(request, response) {
-    response.render('../views/chatroom/chatroom')
+  const participantid = request.params.participantid;
+  const roomid = request.params.roomid;
+    response.render('../views/chatroom/chatroom',{participantid:participantid, roomid:roomid})
 }
 
 // Participants
 
-function participantInfoHandler(request, response) {
-    const { name, email } = request.body;
-    const sqlQuery = `INSERT INTO participants(name,email) VALUES($1,$2);`
-    const safeValues = [name, email];
-    // Rooms will be rendered 
-    client.query(sqlQuery, safeValues).then(data => {
-        response.redirect(`/chatrooms`);
-    }).catch((error) => {
-        errorHandler(error, response)
-    })
-}
+// function participantInfoHandler(request, response) {
+//     const { name, email } = request.body;
+//     const sqlQuery = `INSERT INTO participants(name,email) VALUES($1,$2);`
+//     const safeValues = [name, email];
+//     // Rooms will be rendered 
+//     client.query(sqlQuery, safeValues).then(data => {
+//         response.redirect(`/chatrooms`);
+//     }).catch((error) => {
+//         errorHandler(error, response)
+//     })
+// }
 
 // Messages 
 
@@ -297,3 +393,6 @@ client.connect().then(() => {
         console.log(`Listening to Port ${PORT}`);
     })
 })
+
+server.listen(
+  console.log(`listening on *:${PORT}`));

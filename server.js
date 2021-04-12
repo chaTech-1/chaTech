@@ -10,10 +10,13 @@ const pg = require('pg');
 const { response } = require('express');
 const methodoverride = require('method-override');
 const bcrypt = require('bcrypt');
-
-
-// io
-// bycrypt
+// const server = require("http").createServer(app);
+// const socket_io = require('socket.io')(server, {
+//   cors: {
+//      origin: "http://localhost:3001",
+//      methods: ["GET", "POST"],
+//   },
+// });
 
 // App Set-Up
 const app = express();
@@ -78,20 +81,17 @@ function test_fun(req, res) {
 
 function handlerSignin(request, response) {
     const correctPass ='$2b$10$OUI.lZJoD3qNYyot6Nxku.ZSIItP9P5KPtrEf.KcAiDG1XqYvRYKG'
-    // const safeValues = request.body.username;
-    // const sqlQuery = `SELECT FROM admins WHERE name=$1`;
+    const safeValues = request.body.username;
+    const sqlQuery = `SELECT password FROM admins WHERE name=$1`;
 
-    // client.query(sqlQuery,safeValues).then(result => {
-    //     correctPass = result.rows[0].password
-    // })
+    client.query(sqlQuery,safeValues).then(result => {
+        correctPass1 = result.rows[0].password;
+        console.log(correctPass1)
+    })
 // const correctPass = 'admin';
 
     const enteredPassword=request.body.password;
-    // const userName = request.body.username;
-    // const salt =10;
-//     let hash = bcrypt.hashSync(correctPass, 10);
-//     console.log(correctPass)
-// console.log(hash)
+
     if (bcrypt.compareSync(enteredPassword, correctPass)) {
         console.log(1)
         response.redirect('/dashboard');
@@ -103,11 +103,7 @@ function handlerSignin(request, response) {
     //         if (result === 'true') {
     //             response.redirect('/dashboard');
     //         }
-    // })
-    
- 
-//         // response.render('../views/admin/sign-in',{massage:'incorrect'});
-//         // response.render('../views/admin/sign-in',{massage:'incorrect'})
+
  }
 
 

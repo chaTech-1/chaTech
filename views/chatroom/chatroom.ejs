@@ -15,39 +15,22 @@
         <section id="chatroom-container">
             <section id="message-container">
                 <section id="inner-message-container">
-
-
-                    
-                    <p class="retrieved-message">
-                        <span class="retrieved-message-name">ppp</span>
-                        <span class="retrieved-message-body">Lorem, ipsum dolor.</span>
-                        <span class="retrieved-message-time"> 12:31</span>
-                    </p>
-                    <p class="retrieved-message">
-                        <span class="retrieved-message-name">Ali</span>
-                        <span class="retrieved-message-body">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tempora, nihil cumque?</span>
-                        <span class="retrieved-message-time"> 12:32</span>
-                    </p>
-                    <p class="retrieved-message">
-                        <span class="retrieved-message-name">Naeem</span>
-                        <span class="retrieved-message-body">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Molestias cupiditate rem incidunt repellendus, expedita recusandae molestiae autem. Fugiat optio sapiente illo autem ab in veritatis fugit! Similique praesentium temporibus asperiores.</span>
-                        <span class="retrieved-message-time"> 12:33</span>
-                    </p>
-                    <p class="retrieved-message">
-                        <span class="retrieved-message-name">Aseel</span>
-                        <span class="retrieved-message-body">Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias explicabo eveniet fugit reprehenderit laudantium aut nisi iure ad cumque nobis.</span>
-                        <span class="retrieved-message-time"> 12:34</span>
-                    </p>
-                    <p class="retrieved-message">
-                        <span class="retrieved-message-name">Hamzah</span>
-                        <span class="retrieved-message-body">Lorem ipsum dolor sit amet.</span>
-                        <span class="retrieved-message-time"> 12:35</span>
-                    </p>
-                    <p class="retrieved-message">
+                   
+                   
+                    <!-- <p class="retrieved-message">
                         <span class="retrieved-message-name">Arkhameedis</span>
                         <span class="retrieved-message-body">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Commodi, repellendus.</span>
                         <span class="retrieved-message-time"> 12:36</span>
-                    </p>
+                    </p> -->
+
+                    <% sms.forEach(massage=>{ %>
+                        <p class="retrieved-message">
+                            <span class="retrieved-message-name"><%= massage.user %></span>
+                            <span class="retrieved-message-body"><%= massage.messagebody %></span>
+                            <span class="retrieved-message-time"><%= massage.time %></span>
+                        </p>
+                    <% }) %>
+
                 </section>
             </section>
             <section id="send-message-container">
@@ -58,20 +41,20 @@
                 </form>
             </section>
             <section id="chatroom-nav">
-                <p id="chatroom-nav-header">chat room nav</p>
-                <p class="chatroom-name"><a href="#">Javascript; W Bas</a></p>
-                <p class="chatroom-name"><a href="#">Python For-Life!</a></p>
-                <p class="chatroom-name"><a href="#">SQL All-Day-Long</a></p>
-                <p class="chatroom-name"><a href="#">Regex Heroes</a></p>
-                <p class="chatroom-name"><a href="#">CSS Legends</a></p>
-                <p class="chatroom-name"><a href="#">Javascript; W Bas</a></p>
-                <p class="chatroom-name"><a href="#">Python For-Life!</a></p>
-                <p class="chatroom-name"><a href="#">SQL All-Day-Long</a></p>
-                <p class="chatroom-name"><a href="#">Regex Heroes</a></p>
-                <p class="chatroom-name"><a href="#">CSS Legends</a></p>
+
+              <p id="chatroom-nav-header">chat room nav</p>
+                <% list_room.forEach(element=>{ %>
+                    <form action="chatrooms" method="post" id="select_room">
+                        <input hidden type="text" name="room_id" value="<%= element.roomid %>">
+                        <input hidden type="text" name="user" value="<%= element.user %>">
+                        <button class="chatroom-name" type="submit"><%= element.name %></button>
+                    </form>
+                <% }) %>
+
             </section>
             <section id="tbd">
                 <p>TBD</p>
+                <p><%= user %></p>
             </section>
         </section>
     </main>

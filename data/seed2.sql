@@ -1,0 +1,17 @@
+INSERT INTO messages (messagebody,roomid,participantid)
+VALUES ('Praesent eu elementum enim, in mattis nibh. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.', 3, 51),
+('Mauris non elementum massa. Maecenas eget velit at sapien aliquam.', 3, 52),
+('Phasellus lectus nunc, consectetur eu tellus in, commodo sollicitudin sapien.', 3, 53),
+('Mauris non elementum massa. Maecenas eget velit at sapien aliquam.', 3, 54),
+('Phasellus lectus nunc, consectetur eu tellus in, commodo sollicitudin sapien.', 3, 55),
+('Maecenas eget velit at sapien aliquam.', 4, 5),
+('Mauris non elementum massa. Maecenas eget velit at sapien aliquam.', 4, 54),
+('Phasellus lectus nunc, consectetur eu tellus in, commodo sollicitudin sapien.', 4, 55),
+('Maecenas eget velit at sapien aliquam.', 4, 5),
+('Mauris non elementum massa. Maecenas eget velit at sapien aliquam.', 5, 52),
+('Phasellus lectus nunc, consectetur eu tellus in, commodo sollicitudin sapien.', 5, 53),
+('Mauris non elementum massa. Maecenas eget velit at sapien aliquam.', 5, 54),
+('Phasellus lectus nunc, consectetur eu tellus in, commodo sollicitudin sapien.', 6, 55),
+('Maecenas eget velit at sapien aliquam.', 6, 5),
+('Mauris non elementum massa. Maecenas eget velit at sapien aliquam.', 7, 54),
+('Phasellus lectus nunc, consectetur eu tellus in, commodo sollicitudin sapien.', 8, 55);

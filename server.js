@@ -32,7 +32,7 @@ const Pool = require("pg").Pool;
 const pool = new pg.Pool({
   user: "hamzh",
   host: "localhost",
-  database: "chat7",
+  database: "chat8",
   password: "123456",
   port: 5432,
 });
@@ -42,8 +42,8 @@ const pool = new pg.Pool({
 const server = require("http").createServer(app);
 const socket_io = require('socket.io')(server, {
   cors: {
-     origin: "http://localhost:3000",
-     methods: ["GET", "POST"],
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
   },
 });
 
@@ -64,7 +64,7 @@ app.use(methodoverride('_method'));
 app.get('/', renderhome);
 
 app.get('/signin', renderSignin)
-app.post('/signin', handlerSignin);
+app.post('/signin', handlerAdminSignin);
 app.get('/dashboard', renderDashboard);
 app.post('/dashboard', addRoomToDashboard);
 app.put('/dashboard/:roomid', editRoomInDashboard);
@@ -76,11 +76,11 @@ app.get('/about', renderAbout);
 // app.post('/chatrooms/:roomid/:participantid', sendMSG);
 app.post('/chatrooms', select_chat_room);
 // app.get('/chatrooms/:participantid/:roomid',receiveMSG);
-app.post('/chatrooms2',new_message);
-app.get('/signup',signup);
+app.post('/chatrooms2', new_message);
+app.get('/signup', signup);
 
-function signup(request,response){
-  response.render('../views/signup',{name:'',email:'',error_ms:'555'})
+function signup(request, response) {
+  response.render('../views/signup', { name: '', email: '', error_ms: '555' })
 }
 
 // Call-Back Functions
@@ -105,66 +105,62 @@ function signup(request,response){
 
 // send message using pool
 
-function sendMSG(request,response) {
-  const roomId =  request.params.roomid;
-  const participantId =  request.params.participantid;
-  const messageBody = request.body.message;
-  // const sqlQuery = `INSERT INTO messages( messagebody, roomid, participantid) VALUES($1, $2, $3) RETURNING messageid,time,messagebody,participantid AS table1 SELECT participants.name, messagebody.table1, time.table1 FROM table1 INNER JOIN participants ON participantid.table1=participantid.participants;`
+// function sendMSG(request,response) {
+//   const roomId =  request.params.roomid;
+//   const participantId =  request.params.participantid;
+//   const messageBody = request.body.message;
+//   // const sqlQuery = `INSERT INTO messages( messagebody, roomid, participantid) VALUES($1, $2, $3) RETURNING messageid,time,messagebody,participantid AS table1 SELECT participants.name, messagebody.table1, time.table1 FROM table1 INNER JOIN participants ON participantid.table1=participantid.participants;`
 
-  const sqlQuery1 = `INSERT INTO messages( messagebody, roomid, participantid) VALUES($1, $2, $3) RETURNING messageid,time,messagebody,participantid,name;`
+//   const sqlQuery1 = `INSERT INTO messages( messagebody, roomid, participantid) VALUES($1, $2, $3) RETURNING messageid,time,messagebody,participantid,name;`
 
-  // const sqlQuery2 = `SELECT messages.messagebody,messages.time, participants.name FROM participants,messages WHERE participants.participantid=$1 AND messages.participantid=$1 ORDER BY messageid DESC LIMIT 1`
-  const safeValues = [messageBody,roomId,participantId];
-  // const selectQuery = `Select messagebody.messages, time.messages, name.participants FROM messages INNER JOIN participants ON messages.participantid= participants.participantid;`
+//   // const sqlQuery2 = `SELECT messages.messagebody,messages.time, participants.name FROM participants,messages WHERE participants.participantid=$1 AND messages.participantid=$1 ORDER BY messageid DESC LIMIT 1`
+//   const safeValues = [messageBody,roomId,participantId];
+//   // const selectQuery = `Select messagebody.messages, time.messages, name.participants FROM messages INNER JOIN participants ON messages.participantid= participants.participantid;`
 
-  console.log(safeValues)
-  pool.query(sqlQuery1,safeValues).then((result)=> {
-     console.log(result.rows);
-     response.status(201).send(result.rows)})
-  // .then((result)=> {
-  //   console.log(result.rows)
-  //  response.status(201).send(result.rows);
-  //  })
-  }
+//   console.log(safeValues)
+//   pool.query(sqlQuery1,safeValues).then((result)=> {
+//      console.log(result.rows);
+//      response.status(201).send(result.rows)})
+//   // .then((result)=> {
+//   //   console.log(result.rows)
+//   //  response.status(201).send(result.rows);
+//   //  })
+//   }
 
 
 // function receiveMSG(request,response) {
 
 // }
 
-function saveParticipantInfo(request,response) {
+function saveParticipantInfo(request, response) {
   const name = request.body.name;
   const password = request.body.password;
   const sqlQuery = `INSERT INTO participants(name,email) VALUES($1, $2) RETURNING participantid`
-  const safeValues = [name,password]
-client.query(sqlQuery,safeValues).then(
-   (result) => {
-    const id= result.rows[0].participantid;
-    console.log(id);
-    response.redirect(`/chatrooms/1/${id}`)
-  }
-)
+  const safeValues = [name, password]
+  client.query(sqlQuery, safeValues).then(
+    (result) => {
+      const id = result.rows[0].participantid;
+      console.log(id);
+      response.redirect(`/chatrooms/1/${id}`)
+    }
+  )
 }
-
-
-
-
 
 
 
 
 function renderhome(request, response) {
-    response.render('../views/index')
+  response.render('../views/index')
 }
 
 //About
-function renderAbout (request, response) {
+function renderAbout(request, response) {
   response.render('../views/aboutus');
 }
 
 //Sign-In - Admin
 function renderSignin(request, response) {
-    response.render('../views/admin/sign-in',{massage:''})
+  response.render('../views/admin/sign-in', { massage: '' })
 }
 
 //---------- Test---------------------------------
@@ -172,9 +168,9 @@ app.get('/test', test_fun);
 
 function test_fun(req, res) {
 
-    res.alert('***')
+  res.alert('***')
 
-    res.render('../views/test', { key: 'on' });
+  res.render('../views/test', { key: 'on' });
 }
 
 
@@ -183,39 +179,49 @@ function test_fun(req, res) {
 // Participant
 
 function participantInfoHandler(request, response) {
-  const { name, password } = request.body;
-  const sqlQuery = `SELECT participantid FROM participants WHERE name=$1 AND password=$2`
-  const safeValues = [name, password];
+  const { name ,password } = request.body;
+  const sqlQuery = `SELECT participantid FROM participants WHERE name=$1`
+  const safeValues = [name];
   client.query(sqlQuery, safeValues).then(data => {
-    const num = data.rows.length*1;
-    if(num){
+    const num = data.rows.length * 1;
+    console.log(data)
+    if (num) {
       const participantid = data.rows[0].participantid;
-    // ----- send user-name to chat room ------------  
-    
-    //---------$$-------- edit chat rooms -------------------------
-    const sqlQuery = `SELECT * FROM rooms ORDER BY roomid DESC;`;
-    client.query(sqlQuery).then(data => {
-      const list_room = data.rows; 
-      const user = name;
+      const sql_password =data.rows[0].password;
+      // ----- check password ------------
+      const check = bcrypt.compareSync(password,sql_password);
+      
+      if(check){
+        //---------$$-------- edit chat rooms -------------------------
+      const sqlQuery = `SELECT * FROM rooms ORDER BY roomid DESC;`;
+      client.query(sqlQuery).then(data => {
+        const list_room = data.rows;
+        const user = name;
 
-      // &&&&&&&&&&&&&&&&& GET room 1 messages &&&&&&&&
-      const sqlQuery ="SELECT * FROM participants INNER JOIN messages ON participants.participantid=messages.participantid WHERE messages.roomid=3;";
-     
-      client.query(sqlQuery).then(massages=>{
-        response.render('../views/chatroom/chatroom', { list_room: list_room, user: user ,sms : massages.rows,room_id : 1 ,participantid : participantid});
-      }).catch(error=>{
-        response.render('../views/test', { key: error });
-      })
-      // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+        // &&&&&&&&&&&&&&&&& GET room 1 messages &&&&&&&&
+        const sqlQuery = "SELECT * FROM participants INNER JOIN messages ON participants.participantid=messages.participantid WHERE messages.roomid=3;";
 
-    }).catch(error => {
-      errorHandler(error, response);
-    });
-    // response.render('../views/test', { key: list_room});
-    // *******************************************************
-  }else{
-    response.status(200).send('password or user-name is no correct !!')
-  }
+        client.query(sqlQuery).then(massages => {
+          response.render('../views/chatroom/chatroom', { list_room: list_room, user: user, sms: massages.rows, room_id: 1, participantid: participantid });
+        }).catch(error => {
+          response.render('../views/test', { key: error });
+        })
+        // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+      }).catch(error => {
+        response.status(200).send(error)
+        errorHandler(error, response);
+      });
+      }else{
+        response.status(200).send('password is incorrect !!')
+      }
+
+      
+      // response.render('../views/test', { key: list_room});
+      // *******************************************************
+    } else {
+      response.status(200).send('user-name is incorrect !!')
+    }
   }).catch((error) => {
     errorHandler(error, response)
   })
@@ -224,93 +230,102 @@ function participantInfoHandler(request, response) {
 function select_chat_room(request, response) {
 
   // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-  const {user, room_id ,participantid} = request.body;
- 
-    // ----- send user-name to chat room ------------  
+  const { user, room_id, participantid } = request.body;
 
-    //---------$$-------- edit chat rooms -------------------------
-    const sqlQuery = `SELECT * FROM rooms ORDER BY roomid DESC;`;
-    client.query(sqlQuery).then(data => {
-      const list_room = data.rows; 
-      
+  // ----- send user-name to chat room ------------  
 
-      // &&&&&&&&&&&&&&&&& GET room 1 messages &&&&&&&&
-      const safeValues = [room_id];
-      const sqlQuery ="SELECT * FROM participants INNER JOIN messages ON participants.participantid=messages.participantid WHERE messages.roomid=$1;";
-      client.query(sqlQuery,safeValues).then(massages=>{
-        response.render('../views/chatroom/chatroom', { list_room: list_room, user: user ,sms : massages.rows ,room_id : room_id, participantid:participantid});
-      }).catch(error=>{
-        response.render('../views/test', { key: error });
-      })
-      // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+  //---------$$-------- edit chat rooms -------------------------
+  const sqlQuery = `SELECT * FROM rooms ORDER BY roomid DESC;`;
+  pool.query(sqlQuery).then(data => {
+    const list_room = data.rows;
 
+
+    // &&&&&&&&&&&&&&&&& GET room 1 messages &&&&&&&&
+    const safeValues = [room_id];
+    const sqlQuery = "SELECT * FROM participants INNER JOIN messages ON participants.participantid=messages.participantid WHERE messages.roomid=$1;";
+    pool.query(sqlQuery, safeValues).then(massages => {
+      response.render('../views/chatroom/chatroom', { list_room: list_room, user: user, sms: massages.rows, room_id: room_id, participantid: participantid });
     }).catch(error => {
-      errorHandler(error, response);
-    });
-    // response.render('../views/test', { key: list_room});
-    // *********************************************************
-  
+      response.render('../views/test', { key: error });
+    })
+    // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+  }).catch(error => {
+    errorHandler(error, response);
+  });
+  // response.render('../views/test', { key: list_room});
+  // *********************************************************
+
   // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
   //  response.render('../views/test', { key: room_id });
 }
 
-function new_message(request, response){
+function new_message(request, response) {
 
-  const {participantid, room_id ,message } = request.body;
+  const { participantid, room_id, message } = request.body;
   const sqlQuery = "INSERT INTO messages (messagebody , roomid ,participantid) VALUES($1,$2,$3)"
-  const safeValues = [message,room_id,participantid];
+  const safeValues = [message, room_id, participantid];
 
-  client.query(sqlQuery,safeValues).then(element=>{
+  pool.query(sqlQuery, safeValues).then(element => {
     select_chat_room(request, response);
-  }).catch(error =>{
-    response.render('../views/test', { key: error});
+  }).catch(error => {
+    response.render('../views/test', { key: error });
   })
-  
+
 }
 
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function handlerSignin(request, response) {
-    const correctPass ='$2b$10$OUI.lZJoD3qNYyot6Nxku.ZSIItP9P5KPtrEf.KcAiDG1XqYvRYKG'
+function handlerAdminSignin(request, response) {
 
-    const enteredPassword=request.body.password;
+  const enteredPassword = request.body.password;
 
+  const safeValues = [request.body.username];
+  const sqlQuery = `SELECT password FROM admins WHERE name=$1;`;
+
+  client.query(sqlQuery, safeValues).then(result => {
+    const correctPass = result.rows[0].password;
+    
     if (bcrypt.compareSync(enteredPassword, correctPass)) {
-        console.log(1)
-        response.redirect('/dashboard');
-       } else {
-        response.render('../views/admin/sign-in',{massage:'incorrect'});
-       }
- }
+      console.log(1)
+      response.redirect('/dashboard');
+    } else {
+      response.render('../views/admin/sign-in', { massage: 'incorrect' });
+    }
+  }).catch(error=>{
+    errorHandler(error, response);
+  })
+
+}
 
 
 // Dashboard
 
 function renderDashboard(request, response) {
-  const sqlQuery= `SELECT * FROM rooms ORDER BY roomid DESC;`;
-  client.query(sqlQuery).then(data=>{
+  const sqlQuery = `SELECT * FROM rooms ORDER BY roomid DESC;`;
+  client.query(sqlQuery).then(data => {
     const list = data.rows;
     console.log(list);
-    response.render('../views/admin/dashboard',{ list: list });
-  }).catch(error=>{
+    response.render('../views/admin/dashboard', { list: list });
+  }).catch(error => {
     errorHandler(error, response);
   });
-  
+
 }
 
 // Add a chat room 
 function addRoomToDashboard(request, response) {
-    const sqlQuery =`INSERT INTO rooms(name,adminid) VALUES($1,1)`;
-    const safValues = [request.body.chatroom];
-    client.query(sqlQuery,safValues).then(massage=>{
-        response.redirect('/dashboard');
-    }).catch((error)=>{
-      response.render('../views/test', { key: error });
-    });
- 
+  const sqlQuery = `INSERT INTO rooms(name,adminid) VALUES($1,1)`;
+  const safValues = [request.body.chatroom];
+  client.query(sqlQuery, safValues).then(massage => {
+    response.redirect('/dashboard');
+  }).catch((error) => {
+    response.render('../views/test', { key: error });
+  });
+
 }
 // Edit a chat room
 function editRoomInDashboard(request, response) {
@@ -329,7 +344,7 @@ function editRoomInDashboard(request, response) {
 function deleteRoomFromDashboard(request, response) {
   const roomid = request.params.roomid;
   console.log(roomid);
-  const sqlQuery="DELETE FROM rooms WHERE roomid=$1";
+  const sqlQuery = "DELETE FROM rooms WHERE roomid=$1";
   const safeValues = [roomid];
 
   client.query(sqlQuery, safeValues).then(() => {
@@ -344,7 +359,7 @@ function deleteRoomFromDashboard(request, response) {
 function renderChatRoom(request, response) {
   const participantid = request.params.participantid;
   const roomid = request.params.roomid;
-    response.render('../views/chatroom/chatroom',{participantid:participantid, roomid:roomid})
+  response.render('../views/chatroom/chatroom', { participantid: participantid, roomid: roomid })
 }
 
 // Participants
@@ -373,93 +388,7 @@ function renderChatRoom(request, response) {
 
 
 
-
-
-
 // -----------------------------------------------------------------------------------------------------------------------
-
-// app.post('/userinfo',handleruserinfo);
-// app.post('/sendmessage',handlersendmessage);
-// app.get('/getmessage',handlerrecievemessage);
-// app.post('/dashboard',handlerdashboard);
-// app.post('/newchatroom',handlernewchatroom);
-
-//get the user data and insert it in the participants table
-// function handleruserinfo(request,response){
-
-// const{email,name}=request.body;
-// const userQuery =`INSERT INTO participants(email,name) VALUES($1,$2);`
-// const userValues= [email,name];
-
-// client.query(userQuery,userValues).then(data =>{
-//     response.redirect('/chatroom');
-// }).catch(error=>{
-//     response.render('../views/error')
-// })
-// }
-
-
-
-// insert the message inside the messages table and redirect to the handler get messages 
-// function handlersendmessage(request,response){
-
-//     const{message_body}=request.body;
-//     const userQuery =`INSERT INTO participants (message_body) VALUES ($1);`
-//     const userValues= [message_body];
-
-//     client.query(userQuery,userValues).then(data =>{
-//         response.redirect('/getmessage');
-//     }).catch(error=>{
-//         response.render('../views/error')
-//     }) 
-//     }
-
-
-
-// get the messages from the messages table and render the message body in the chatroom.ejs (just need to make the template)
-//maybe we need to create an object ???
-//  function handlerrecievemessage(request,response){
-
-//      const{message_body}=request.body;
-//         const userQuery =`SELECT time,message_body,participant_id FROM participants;`
-//         const userValues= [message_body];
-
-//         client.query(userQuery,userValues).then(data =>{
-//             response.render('./chatroom/chatroom',{data:data.rows[0]});
-//         }).catch(error=>{
-//             response.render('../views/error')
-//         })
-//         }
-
-//render the dashboard after admins sign in 
-// function handlerdashboard(request,response){
-
-//     const{name}=request.body;
-//      const userQuery =`SELECT name FROM rooms VALUES($);`
-//      const userValues= [name];
-
-//      client.query(userQuery,userValues).then(data =>{
-//          response.render('./chatroom/chatroom',{data:data.rows[0]});
-//          }).catch(error=>{
-//           response.render('../views/error')
-//          }) 
-//          }
-//to add a new room but still not finish 
-// function handlernewchatroom(request,response){
-
-//     const{name}=request.body;
-//     const userQuery =`INSERT INTO rooms (name) VALUES ($1,$2);`
-//     const userValues= [name];
-
-//     client.query(userQuery,userValues).then(data =>{
-//         // response.render('');
-//         }).catch(error=>{
-//          response.render('../views/error')
-//         }) 
-
-// }
-
-
 
 
 // -----------------------------------------------------------------------------------------------------------------------
@@ -467,7 +396,7 @@ function renderChatRoom(request, response) {
 // All Errors
 
 function errorHandler(request, response) {
-    response.render('../views/error')
+  response.render('../views/error')
 }
 
 app.use("*", errorHandler)
@@ -475,9 +404,9 @@ app.use("*", errorHandler)
 
 
 client.connect().then(() => {
-    app.listen(PORT, () => {
-        console.log(`Listening to Port ${PORT}`);
-    })
+  app.listen(PORT, () => {
+    console.log(`Listening to Port ${PORT}`);
+  })
 })
 
 server.listen(

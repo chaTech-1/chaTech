@@ -14,13 +14,20 @@
     <main>
         <!-- Hero Section -->
         <section id="hero-image">
+            
             <section id="hero-text-and-form">
                 <p id="hero-text">Short One-Liner Here</p>
-                <form id="hero-form" action="/" method="post">
-                    <input type="text" name="name" id="hero-section-name" placeholder="user-Name" required autocomplete="off"><br>
+                
+
+                <form id="sing_up" action="/sing_up" method="post">
+                    <p><%= error_ms %></p>
+                    <input type="text" name="name" id="hero-section-name" placeholder="Your Name" required autocomplete="off" value="<%= name %>"><br>
+                    <input type="text" name="email" id="hero-section-name" placeholder="Your Email" required autocomplete="off" value="<%= email %>"><br>
                     <input type="password" name="password" id="hero-section-name" placeholder="Your password" required autocomplete="off"><br>
+                    <input type="password" name="password" id="hero-section-name" placeholder="re-type password" required autocomplete="off"><br>
                     <button type="submit">Let's Go</button>
                 </form>
+
             </section>
         </section>
     </main>

@@ -7,7 +7,8 @@ DROP TABLE IF EXISTS messages;
 CREATE TABLE admins(
 adminid SERIAL PRIMARY KEY,
 name VARCHAR(225),
-password VARCHAR(225));
+password VARCHAR(225)
+);
 
 
 CREATE TABLE rooms(
@@ -21,17 +22,17 @@ FOREIGN KEY (adminid) REFERENCES admins(adminid)
 CREATE TABLE participants(
 participantid SERIAL PRIMARY KEY,
 name VARCHAR(225),
-email VARCHAR(225)
+email VARCHAR(225),
+password VARCHAR(225)
 );
 
 
 CREATE TABLE messages(
-name VARCHAR(225),
-messageid SERIAL PRIMARY KEY, 
+messageid SERIAL PRIMARY KEY,
 time TIMESTAMP NOT NULL DEFAULT now(),
 messagebody TEXT,
 roomid INT,
 FOREIGN KEY (roomid) REFERENCES rooms(roomid),
 participantid INT,
-FOREIGN KEY (participantid) REFERENCES participants(participantid),
+FOREIGN KEY (participantid) REFERENCES participants(participantid)
 );

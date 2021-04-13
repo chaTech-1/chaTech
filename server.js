@@ -10,19 +10,13 @@ const pg = require('pg');
 const { response } = require('express');
 const methodoverride = require('method-override');
 const bcrypt = require('bcrypt');
+const { emit } = require("process");
+const moment = require('moment');
 
-// body parser - 
-// const { emit } = require("process");
-// const bodyParser = require('body-parser')
-// app.use(bodyParser.json())
-// app.use(
-//   bodyParser.urlencoded({
-//     extended: true,
-//   })
-// )
 // App Set-Up
 const app = express();
 app.use(cors());
+app.use(express.json());
 // Database
 const DATABASE_URL = process.env.DATABASE_URL;
 const client = new pg.Client(DATABASE_URL);
@@ -30,10 +24,10 @@ const client = new pg.Client(DATABASE_URL);
 // pool
 const Pool = require("pg").Pool;
 const pool = new pg.Pool({
-  user: "hamzh",
+  user: "aseelalzweri",
   host: "localhost",
-  database: "chat8",
-  password: "123456",
+  database: "chatapp",
+  password: "SoftDev5060",
   port: 5432,
 });
 
@@ -47,11 +41,23 @@ const socket_io = require('socket.io')(server, {
   },
 });
 
+socket_io.on('connection', (socket) => {
+  console.log('User Connected ^^^^^^^^^^^^^^^^^', socket.id)
 
+  socket.on('join', (payload) => {
+    socket.join(payload.id)
+    console.log(socket.id + ' joined room: ' + payload.id)
+  })
+
+  socket.on('newMsg', (payload) => {
+    socket_io.emit('renderMsg', payload)
+  })
+})
 
 // Environmental Variables
 const PORT = process.env.PORT || 3000;
 const ENV = process.env.ENV;
+// const socketPort= process.env.socketPort || 8000;
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -62,75 +68,28 @@ app.use(methodoverride('_method'));
 
 // endpoints
 app.get('/', renderhome);
-
+app.post('/', participantInfoHandler);
+app.get('/about', renderAbout);
+app.get('/signup', signup);
 app.get('/signin', renderSignin)
 app.post('/signin', handlerAdminSignin);
 app.get('/dashboard', renderDashboard);
 app.post('/dashboard', addRoomToDashboard);
 app.put('/dashboard/:roomid', editRoomInDashboard);
 app.delete('/dashboard/:roomid', deleteRoomFromDashboard);
-app.get('/chatrooms/:roomid/:participantid', renderChatRoom);
+
 // app.post('/', saveParticipantInfo);
-app.post('/', participantInfoHandler);
-app.get('/about', renderAbout);
-// app.post('/chatrooms/:roomid/:participantid', sendMSG);
+
 app.post('/chatrooms', select_chat_room);
-// app.get('/chatrooms/:participantid/:roomid',receiveMSG);
 app.post('/chatrooms2', new_message);
-app.get('/signup', signup);
+
+
 
 function signup(request, response) {
   response.render('../views/signup', { name: '', email: '', error_ms: '555' })
 }
 
 // Call-Back Functions
-
-// Messages
-
-// send message using client
-
-// function sendMSG(request,response) {
-// const roomId =  request.params.roomid;
-// const participantId =  request.params.participantid;
-// const messageBody = request.body.message;
-// // RETURNING messageid,time
-// const sqlQuery = `INSERT INTO messages( messagebody, roomid, participantid) VALUES($1, $2, $3) RETURNING messageid,time,messagebody,participantid;`
-// const safeValues = [messageBody,roomId,participantId]
-// console.log(safeValues)
-// client.query(sqlQuery,safeValues).then( (result)=> {
-//   console.log(result.rows)
-//  response.status(201).send(result.rows);
-//  })
-// }
-
-// send message using pool
-
-// function sendMSG(request,response) {
-//   const roomId =  request.params.roomid;
-//   const participantId =  request.params.participantid;
-//   const messageBody = request.body.message;
-//   // const sqlQuery = `INSERT INTO messages( messagebody, roomid, participantid) VALUES($1, $2, $3) RETURNING messageid,time,messagebody,participantid AS table1 SELECT participants.name, messagebody.table1, time.table1 FROM table1 INNER JOIN participants ON participantid.table1=participantid.participants;`
-
-//   const sqlQuery1 = `INSERT INTO messages( messagebody, roomid, participantid) VALUES($1, $2, $3) RETURNING messageid,time,messagebody,participantid,name;`
-
-//   // const sqlQuery2 = `SELECT messages.messagebody,messages.time, participants.name FROM participants,messages WHERE participants.participantid=$1 AND messages.participantid=$1 ORDER BY messageid DESC LIMIT 1`
-//   const safeValues = [messageBody,roomId,participantId];
-//   // const selectQuery = `Select messagebody.messages, time.messages, name.participants FROM messages INNER JOIN participants ON messages.participantid= participants.participantid;`
-
-//   console.log(safeValues)
-//   pool.query(sqlQuery1,safeValues).then((result)=> {
-//      console.log(result.rows);
-//      response.status(201).send(result.rows)})
-//   // .then((result)=> {
-//   //   console.log(result.rows)
-//   //  response.status(201).send(result.rows);
-//   //  })
-//   }
-
-
-// function receiveMSG(request,response) {
-
-// }
 
 function saveParticipantInfo(request, response) {
   const name = request.body.name;
@@ -179,7 +138,7 @@ function test_fun(req, res) {
 // Participant
 
 function participantInfoHandler(request, response) {
-  const { name ,password } = request.body;
+  const { name, password } = request.body;
   const sqlQuery = `SELECT * FROM participants WHERE name=$1`
   const safeValues = [name];
   client.query(sqlQuery, safeValues).then(data => {
@@ -188,44 +147,44 @@ function participantInfoHandler(request, response) {
 
 
     if (num) {
-      
+
       const participantid = data.rows[0].participantid;
-      const sql_password =data.rows[0].password;
-      
+      const sql_password = data.rows[0].password;
+
       // ----- check password ------------
-      const check = bcrypt.compareSync(password,sql_password);
+      const check = bcrypt.compareSync(password, sql_password);
 
-      if(check){
+      if (check) {
         //---------$$-------- edit chat rooms -------------------------
-      const sqlQuery = `SELECT * FROM rooms ORDER BY roomid DESC;`;
-      client.query(sqlQuery).then(data => {
-        const list_room = data.rows;
-        const user = name;
+        const sqlQuery = `SELECT * FROM rooms ORDER BY roomid DESC;`;
+        client.query(sqlQuery).then(data => {
+          const list_room = data.rows;
+          const user = name;
 
-        // &&&&&&&&&&&&&&&&& GET room 1 messages &&&&&&&&
-        const sqlQuery = "SELECT * FROM participants INNER JOIN messages ON participants.participantid=messages.participantid WHERE messages.roomid=3;";
+          // &&&&&&&&&&&&&&&&& GET room 1 messages &&&&&&&&
+          const sqlQuery = "SELECT * FROM participants INNER JOIN messages ON participants.participantid=messages.participantid WHERE messages.roomid=3;";
 
-        client.query(sqlQuery).then(massages => {
-          response.render('../views/chatroom/chatroom', { list_room: list_room, user: user, sms: massages.rows, room_id: 1, participantid: participantid });
+          client.query(sqlQuery).then(massages => {
+            response.render('../views/chatroom/chatroom', { list_room: list_room, user: user, sms: massages.rows, room_id: 1, participantid: participantid });
+          }).catch(error => {
+            response.render('../views/test', { key: error });
+          })
+          // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
         }).catch(error => {
-          response.render('../views/test', { key: error });
-        })
-        // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
-      }).catch(error => {
-        response.status(200).send(error)
-        errorHandler(error, response);
-      });
-      }else{
+          response.status(200).send(error)
+          errorHandler(error, response);
+        });
+      } else {
         response.status(200).send('password is incorrect !!')
       }
-      
-      
+
+
       // *******************************************************
-    } 
-    
-    
-    
+    }
+
+
+
     else {
       response.status(200).send('user-name is incorrect !!')
     }
@@ -233,6 +192,24 @@ function participantInfoHandler(request, response) {
     errorHandler(error, response)
   })
 }
+
+
+function new_message(request, response) {
+  const { participantid, room_id, message } = request.body;
+  console.log('????????????', participantid, room_id, message,request.body)
+  const sqlQuery = "INSERT INTO messages (messagebody , roomid ,participantid) VALUES($1,$2,$3)"
+  const safeValues = [message, room_id, participantid];
+
+  pool.query(sqlQuery, safeValues).then(element => {
+    select_chat_room(request, response);
+  }).catch(error => {
+    response.render('../views/test', { key: error });
+  })
+
+}
+
+
+
 
 function select_chat_room(request, response) {
 
@@ -251,16 +228,18 @@ function select_chat_room(request, response) {
     const safeValues = [room_id];
     const sqlQuery = "SELECT * FROM participants INNER JOIN messages ON participants.participantid=messages.participantid WHERE messages.roomid=$1;";
     // const sqlQuery = "SELECT * FROM messages INNER JOIN participants ON participants.participantid=messages.participantid WHERE messages.roomid=$1;";
-    
-    function sort1(a,b){
-      if(a.messageid>b.messageid){
+
+    function sort1(a, b) {
+      if (a.messageid > b.messageid) {
         return 1;
       }
-      if(b.messageid>a.messageid){
+      if (b.messageid > a.messageid) {
         return -1;
       }
       return 0;
     }
+
+    
 
     pool.query(sqlQuery, safeValues).then(massages => {
       const array = massages.rows;
@@ -283,19 +262,7 @@ function select_chat_room(request, response) {
   //  response.render('../views/test', { key: room_id });
 }
 
-function new_message(request, response) {
 
-  const { participantid, room_id, message } = request.body;
-  const sqlQuery = "INSERT INTO messages (messagebody , roomid ,participantid) VALUES($1,$2,$3)"
-  const safeValues = [message, room_id, participantid];
-
-  pool.query(sqlQuery, safeValues).then(element => {
-    select_chat_room(request, response);
-  }).catch(error => {
-    response.render('../views/test', { key: error });
-  })
-
-}
 
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -309,14 +276,14 @@ function handlerAdminSignin(request, response) {
 
   client.query(sqlQuery, safeValues).then(result => {
     const correctPass = result.rows[0].password;
-    
+
     if (bcrypt.compareSync(enteredPassword, correctPass)) {
       console.log(1)
       response.redirect('/dashboard');
     } else {
       response.render('../views/admin/sign-in', { massage: 'incorrect' });
     }
-  }).catch(error=>{
+  }).catch(error => {
     errorHandler(error, response);
   })
 
@@ -375,13 +342,6 @@ function deleteRoomFromDashboard(request, response) {
   });
 }
 
-// Chat Room 
-
-function renderChatRoom(request, response) {
-  const participantid = request.params.participantid;
-  const roomid = request.params.roomid;
-  response.render('../views/chatroom/chatroom', { participantid: participantid, roomid: roomid })
-}
 
 // Participants
 
@@ -397,19 +357,10 @@ function renderChatRoom(request, response) {
 //     })
 // }
 
-// Messages 
-
-// Render Chat Thread
-
-// Post Message
-
-// Delete Message
-
-// Edit Message
 
 
 
-// -----------------------------------------------------------------------------------------------------------------------
+
 
 
 // -----------------------------------------------------------------------------------------------------------------------
@@ -425,10 +376,14 @@ app.use("*", errorHandler)
 
 
 client.connect().then(() => {
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     console.log(`Listening to Port ${PORT}`);
   })
 })
 
-server.listen(
-  console.log(`listening on *:${PORT}`));
+// server.listen(
+//   console.log(`listening on *:${PORT}`));
+
+
+// empty the message sent 
+// cahnge the date format

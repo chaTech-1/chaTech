@@ -3,6 +3,9 @@
 
 <head>
     <%- include('../partials/head.ejs') %>
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js" integrity="sha384-LzhRnpGmQP+lOvWruF/lgkcqD+WDVt9fU3H4BWmwP5u5LTmkUGafMcpZKNObVMLU" crossorigin="anonymous"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=Array.from,Promise,Symbol,Object.setPrototypeOf,Object.getOwnPropertySymbols,Set"></script>
+<script src="https://cdn.jsdelivr.net/npm/superagent"></script>
 </head>
 
 <body>
@@ -34,25 +37,25 @@
                 </section>
             </section>
             <section id="send-message-container">
-                <form action='chatrooms2' method="post" id="input-message-form">
+                <form action='chatrooms2' method="post" id="input-message-form" onsubmit="send(event)">
                     <input name="user" type="hidden" value='<%= user %>'>
                     <input name="room_id" type="hidden" value='<%= room_id %>'>
                     <input name="participantid" type="hidden" value='<%= participantid %>'>
     
                     <textarea name="message" id="message" placeholder="Type here baleez..." required
                         autocomplete="off"></textarea>
-                    <button type="submit">send</button>
+                    <button  id = "sendButton" type="submit">send</button>
                 </form>
             </section>
             <section id="chatroom-nav">
 
               <p id="chatroom-nav-header">chat room nav</p>
                 <% list_room.forEach(element=>{ %>
-                    <form action="chatrooms" method="post" id="select_room">
+                    <form action="chatrooms" method="post" id="select_room" onsubmit="join(event,<%= element.roomid %>)">
                         <input hidden type="text" name="room_id" value="<%= element.roomid %>">
                         <input hidden type="text" name="user" value="<%= user %>">
                         <input hidden type="text" name="participantid" value="<%= participantid %>">
-                        <button class="chatroom-name" type="submit"><%= element.name %></button>
+                        <button  class="chatroom-name" type="submit"><%= element.name %></button>
                     </form>
                 <% }) %>
 
@@ -74,6 +77,9 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="../../app.js"> </script>
+
+
     <script>
         $('#burger-menu').click(function() {
             $('#burger-menu-list').toggleClass('hide-burger-menu');

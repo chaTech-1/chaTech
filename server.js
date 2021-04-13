@@ -180,17 +180,21 @@ function test_fun(req, res) {
 
 function participantInfoHandler(request, response) {
   const { name ,password } = request.body;
-  const sqlQuery = `SELECT participantid FROM participants WHERE name=$1`
+  const sqlQuery = `SELECT * FROM participants WHERE name=$1`
   const safeValues = [name];
   client.query(sqlQuery, safeValues).then(data => {
     const num = data.rows.length * 1;
     console.log(data)
+
+
     if (num) {
+      
       const participantid = data.rows[0].participantid;
       const sql_password =data.rows[0].password;
+      
       // ----- check password ------------
       const check = bcrypt.compareSync(password,sql_password);
-      
+
       if(check){
         //---------$$-------- edit chat rooms -------------------------
       const sqlQuery = `SELECT * FROM rooms ORDER BY roomid DESC;`;
@@ -215,11 +219,14 @@ function participantInfoHandler(request, response) {
       }else{
         response.status(200).send('password is incorrect !!')
       }
-
       
-      // response.render('../views/test', { key: list_room});
+      
       // *******************************************************
-    } else {
+    } 
+    
+    
+    
+    else {
       response.status(200).send('user-name is incorrect !!')
     }
   }).catch((error) => {
@@ -243,8 +250,22 @@ function select_chat_room(request, response) {
     // &&&&&&&&&&&&&&&&& GET room 1 messages &&&&&&&&
     const safeValues = [room_id];
     const sqlQuery = "SELECT * FROM participants INNER JOIN messages ON participants.participantid=messages.participantid WHERE messages.roomid=$1;";
+    // const sqlQuery = "SELECT * FROM messages INNER JOIN participants ON participants.participantid=messages.participantid WHERE messages.roomid=$1;";
+    
+    function sort1(a,b){
+      if(a.messageid>b.messageid){
+        return 1;
+      }
+      if(b.messageid>a.messageid){
+        return -1;
+      }
+      return 0;
+    }
+
     pool.query(sqlQuery, safeValues).then(massages => {
-      response.render('../views/chatroom/chatroom', { list_room: list_room, user: user, sms: massages.rows, room_id: room_id, participantid: participantid });
+      const array = massages.rows;
+      const massages2 = array.sort(sort1);
+      response.render('../views/chatroom/chatroom', { list_room: list_room, user: user, sms: massages2, room_id: room_id, participantid: participantid });
     }).catch(error => {
       response.render('../views/test', { key: error });
     })

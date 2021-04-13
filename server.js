@@ -30,10 +30,10 @@ const client = new pg.Client(DATABASE_URL);
 // pool
 const Pool = require("pg").Pool;
 const pool = new pg.Pool({
-  user: "aseelalzweri",
+  user: "hamzh",
   host: "localhost",
-  database: "chatapp",
-  password: "SoftDev5060*",
+  database: "chat7",
+  password: "123456",
   port: 5432,
 });
 
@@ -62,7 +62,7 @@ app.use(methodoverride('_method'));
 
 // endpoints
 app.get('/', renderhome);
-// app.post('/', participantInfoHandler)
+
 app.get('/signin', renderSignin)
 app.post('/signin', handlerSignin);
 app.get('/dashboard', renderDashboard);
@@ -70,11 +70,18 @@ app.post('/dashboard', addRoomToDashboard);
 app.put('/dashboard/:roomid', editRoomInDashboard);
 app.delete('/dashboard/:roomid', deleteRoomFromDashboard);
 app.get('/chatrooms/:roomid/:participantid', renderChatRoom);
-app.post('/', saveParticipantInfo);
+// app.post('/', saveParticipantInfo);
+app.post('/', participantInfoHandler);
 app.get('/about', renderAbout);
-app.post('/chatrooms/:roomid/:participantid', sendMSG);
+// app.post('/chatrooms/:roomid/:participantid', sendMSG);
+app.post('/chatrooms', select_chat_room);
 // app.get('/chatrooms/:participantid/:roomid',receiveMSG);
+app.post('/chatrooms2',new_message);
+app.get('/signup',signup);
 
+function signup(request,response){
+  response.render('../views/signup',{name:'',email:'',error_ms:'555'})
+}
 
 // Call-Back Functions
 
@@ -173,16 +180,101 @@ function test_fun(req, res) {
 
 // ***********************************************
 
+// Participant
+
+function participantInfoHandler(request, response) {
+  const { name, password } = request.body;
+  const sqlQuery = `SELECT participantid FROM participants WHERE name=$1 AND password=$2`
+  const safeValues = [name, password];
+  client.query(sqlQuery, safeValues).then(data => {
+    const num = data.rows.length*1;
+    if(num){
+      const participantid = data.rows[0].participantid;
+    // ----- send user-name to chat room ------------  
+    
+    //---------$$-------- edit chat rooms -------------------------
+    const sqlQuery = `SELECT * FROM rooms ORDER BY roomid DESC;`;
+    client.query(sqlQuery).then(data => {
+      const list_room = data.rows; 
+      const user = name;
+
+      // &&&&&&&&&&&&&&&&& GET room 1 messages &&&&&&&&
+      const sqlQuery ="SELECT * FROM participants INNER JOIN messages ON participants.participantid=messages.participantid WHERE messages.roomid=3;";
+     
+      client.query(sqlQuery).then(massages=>{
+        response.render('../views/chatroom/chatroom', { list_room: list_room, user: user ,sms : massages.rows,room_id : 1 ,participantid : participantid});
+      }).catch(error=>{
+        response.render('../views/test', { key: error });
+      })
+      // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+    }).catch(error => {
+      errorHandler(error, response);
+    });
+    // response.render('../views/test', { key: list_room});
+    // *******************************************************
+  }else{
+    response.status(200).send('password or user-name is no correct !!')
+  }
+  }).catch((error) => {
+    errorHandler(error, response)
+  })
+}
+
+function select_chat_room(request, response) {
+
+  // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  const {user, room_id ,participantid} = request.body;
+ 
+    // ----- send user-name to chat room ------------  
+
+    //---------$$-------- edit chat rooms -------------------------
+    const sqlQuery = `SELECT * FROM rooms ORDER BY roomid DESC;`;
+    client.query(sqlQuery).then(data => {
+      const list_room = data.rows; 
+      
+
+      // &&&&&&&&&&&&&&&&& GET room 1 messages &&&&&&&&
+      const safeValues = [room_id];
+      const sqlQuery ="SELECT * FROM participants INNER JOIN messages ON participants.participantid=messages.participantid WHERE messages.roomid=$1;";
+      client.query(sqlQuery,safeValues).then(massages=>{
+        response.render('../views/chatroom/chatroom', { list_room: list_room, user: user ,sms : massages.rows ,room_id : room_id, participantid:participantid});
+      }).catch(error=>{
+        response.render('../views/test', { key: error });
+      })
+      // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+    }).catch(error => {
+      errorHandler(error, response);
+    });
+    // response.render('../views/test', { key: list_room});
+    // *********************************************************
+  
+  // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+  //  response.render('../views/test', { key: room_id });
+}
+
+function new_message(request, response){
+
+  const {participantid, room_id ,message } = request.body;
+  const sqlQuery = "INSERT INTO messages (messagebody , roomid ,participantid) VALUES($1,$2,$3)"
+  const safeValues = [message,room_id,participantid];
+
+  client.query(sqlQuery,safeValues).then(element=>{
+    select_chat_room(request, response);
+  }).catch(error =>{
+    response.render('../views/test', { key: error});
+  })
+  
+}
+
+
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 function handlerSignin(request, response) {
     const correctPass ='$2b$10$OUI.lZJoD3qNYyot6Nxku.ZSIItP9P5KPtrEf.KcAiDG1XqYvRYKG'
-    // const safeValues = request.body.username;
-    // const sqlQuery = `SELECT password FROM admins WHERE name=$1`;
-
-    // client.query(sqlQuery,safeValues).then(result => {
-    //     correctPass1 = result.rows[0].password;
-    //     console.log(correctPass1)
-    // })
-// const correctPass = 'admin';
 
     const enteredPassword=request.body.password;
 
@@ -192,12 +284,6 @@ function handlerSignin(request, response) {
        } else {
         response.render('../views/admin/sign-in',{massage:'incorrect'});
        }
-    // bcrypt.hash(myPlaintextPassword, salt).then(encrypted=>{
-    //     bcrypt.compare(myPlaintextPassword, encrypted, function(error, result) {
-    //         if (result === 'true') {
-    //             response.redirect('/dashboard');
-    //         }
-
  }
 
 
@@ -222,7 +308,7 @@ function addRoomToDashboard(request, response) {
     client.query(sqlQuery,safValues).then(massage=>{
         response.redirect('/dashboard');
     }).catch((error)=>{
-        errorHandler(error, response)
+      response.render('../views/test', { key: error });
     });
  
 }

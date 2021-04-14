@@ -156,8 +156,8 @@ function check_signup(request, response) {
         response.render('../views/signup', { name: name, email: email, error_ms: 'That username is taken . Try again' })
       }
 
-
-      const safeValues = [name, email, password];
+      const password_hash = bcrypt.hashSync(password, 10);
+      const safeValues = [name, email, password_hash];
       const sqlQuery = "INSERT INTO participants (name,email,password) VALUES ($1 , $2 , $3 );"
 
       client.query(sqlQuery, safeValues).then(data => {
@@ -192,10 +192,6 @@ function participantInfoHandler(request, response) {
 
       // ----- check password ------------
       let check = bcrypt.compareSync(password, sql_password);
-
-      if (sql_password===password){
-        check=true;
-      }
 
       if (check) {
         //---------$$-------- edit chat rooms -------------------------

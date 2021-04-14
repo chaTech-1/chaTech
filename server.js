@@ -254,6 +254,7 @@ function select_chat_room(request, response) {
     // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
   }).catch(error => {
+    console.log(error.message)
     errorHandler(error, response);
   });
   // response.render('../views/test', { key: list_room});

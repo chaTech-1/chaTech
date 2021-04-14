@@ -197,10 +197,10 @@ function participantInfoHandler(request, response) {
 function new_message(request, response) {
   const date = new Date().toLocaleTimeString("en-US");
   const { participantid, room_id, message } = request.body;
-  console.log('????????????', participantid, room_id, message,request.body)
+  console.log('????????????', participantid, room_id, message, request.body)
   const sqlQuery = "INSERT INTO messages (messagebody , roomid ,participantid,time) VALUES($1,$2,$3,$4)"
   const safeValues = [message, room_id, participantid, date];
-console.log(  safeValues)
+  console.log(safeValues)
   pool.query(sqlQuery, safeValues).then(element => {
     select_chat_room(request, response);
   }).catch(error => {
@@ -220,14 +220,13 @@ function select_chat_room(request, response) {
   // ----- send user-name to chat room ------------  
 
   //---------$$-------- edit chat rooms -------------------------
-  const sqlQuery = `SELECT * FROM rooms ORDER BY roomid DESC;`;
-  console.log(1)
+  const sqlQuery = "SELECT * FROM rooms;";
+  console.log(1, sqlQuery)
   pool.query(sqlQuery).then(data => {
+    console.log(2)
     const list_room = data.rows;
-console.log(list_room)
 
     // &&&&&&&&&&&&&&&&& GET room 1 messages &&&&&&&&
-    console.log(2)
     const safeValues = [room_id];
     const sqlQuery = "SELECT * FROM participants INNER JOIN messages ON participants.participantid=messages.participantid WHERE messages.roomid=$1;";
     // const sqlQuery = "SELECT * FROM messages INNER JOIN participants ON participants.participantid=messages.participantid WHERE messages.roomid=$1;";
@@ -242,7 +241,7 @@ console.log(list_room)
       return 0;
     }
 
-    
+
     console.log(3)
 
     pool.query(sqlQuery, safeValues).then(massages => {

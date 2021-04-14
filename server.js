@@ -24,10 +24,10 @@ const client = new pg.Client(DATABASE_URL);
 // pool
 const Pool = require("pg").Pool;
 const pool = new pg.Pool({
-  user: "aseelalzweri",
+  user: "mahmoud-alzoubi",
   host: "localhost",
   database: "chatapp",
-  password: "SoftDev5060",
+  password: "0000",
   port: 5432,
 });
 
@@ -86,7 +86,7 @@ app.post('/chatrooms2', new_message);
 
 
 function signup(request, response) {
-  response.render('../views/signup', { name: '', email: '', error_ms: '555' })
+  response.render('../views/signup', { name: '', email: '', error_ms: '' })
 }
 
 // Call-Back Functions

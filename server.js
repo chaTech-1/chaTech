@@ -195,11 +195,12 @@ function participantInfoHandler(request, response) {
 
 
 function new_message(request, response) {
+  const date = new Date().toLocaleTimeString("en-US");
   const { participantid, room_id, message } = request.body;
   console.log('????????????', participantid, room_id, message,request.body)
-  const sqlQuery = "INSERT INTO messages (messagebody , roomid ,participantid) VALUES($1,$2,$3)"
-  const safeValues = [message, room_id, participantid];
-
+  const sqlQuery = "INSERT INTO messages (messagebody , roomid ,participantid,time) VALUES($1,$2,$3,$4)"
+  const safeValues = [message, room_id, participantid, date];
+console.log(  safeValues)
   pool.query(sqlQuery, safeValues).then(element => {
     select_chat_room(request, response);
   }).catch(error => {

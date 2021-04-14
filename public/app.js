@@ -39,11 +39,13 @@ async function send(e) {
     const payload = { msg, room, user, date }
 
     socket.emit('newMsg', payload)
-
+    
     // <section id="inner-message-container">
     // <p class="retrieved-message">
     //     <span class="retrieved-message-name"><%= massage.name %></span>
     //     <span class="retrieved-message-body"><%= massage.messagebody %></span>
     //     <span class="retrieved-message-time"><%= massage.time %></span>
     // </p>
+     const textbox = document.getElementById('message').value = "";
+
 }

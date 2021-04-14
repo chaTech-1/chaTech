@@ -29,7 +29,7 @@ password VARCHAR(225)
 
 CREATE TABLE messages(
 messageid SERIAL PRIMARY KEY,
-time TIMESTAMP NOT NULL DEFAULT now(),
+time TEXT DEFAULT 5,
 messagebody TEXT,
 roomid INT,
 FOREIGN KEY (roomid) REFERENCES rooms(roomid),

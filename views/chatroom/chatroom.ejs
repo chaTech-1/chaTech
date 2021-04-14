@@ -10,7 +10,44 @@
 
 <body>
     <header>
-        <%- include('../partials/header.ejs') %>
+        <!-- Logo -->
+        <h1><a href="/" id="nav-logo">chaTech;</a></h1>
+        <!-- Nav Links, Hidden By Default -->
+        <ul>
+            <li><a href="/signin" class="nav-links">Admin</a></li>
+            <li><a href="/about" class="nav-links">About</a></li>
+            <li><a href="/signup" action="/signup" method="get">Sign up</a></li>
+            
+
+
+        </ul>
+
+        <!-- Burger Menu Button -->
+        <a href="javascript:void(0)" id="burger-menu"><i class="fa fa-bars"></i></a>
+
+        <!-- Burger Menu List -->
+        <section id="burger-menu-list" class="hide-burger-menu">
+            <ul>
+                <li><a href="/signin" class="nav-links">Admin</a></li>
+                <li><a href="/about" class="nav-links">About</a></li>
+                <li><a href="/signup" class="nav-links" action="/signup" method="get">Sign up</a></li>
+
+                <!-- Chatrooms Nav Inside Burger Menu -->
+                <% list_room.forEach(element=>{ %>
+                  <form action="chatrooms" method="post" id="select_room">
+                      <input hidden type="text" name="room_id" value="<%= element.roomid %>">
+                      <input hidden type="text" name="user" value="<%= user %>">
+                      <input hidden type="text" name="participantid" value="<%= participantid %>">
+                              <% if(element.roomid==room_id){%>
+                      <button  class="nav-links-chatroom-active" type="submit"><%= element.name %></button>
+                      <%}else{ %>
+                          <button  class="nav-links-chatroom" type="submit"><%= element.name %></button>
+                          <%}%>
+                  </form>
+              <% }) %>
+                
+            </ul>
+        </section>
     </header>
 
     <main>

@@ -47,7 +47,8 @@ header {
 
 @media screen and (min-width: 1024px) {
 
-  #burger-menu {
+  #burger-menu,
+  #burger-menu-list {
     display: none;
   }
   header {

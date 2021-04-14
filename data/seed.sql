@@ -14,7 +14,7 @@ VALUES
 
 INSERT INTO participants (name,email,password)
 VALUES ('aseel' , 'email-1', '$2b$10$Wd6z3MztpFbqZ5V8a0v8AeZUoWK6tYS7jG4PfcHqtmU5LpldHIAWK'),
-('hamzeh' , 'email-2', '$2b$10$Wd6z3MztpFbqZ5V8a0v8AeZUoWK6tYS7jG4PfcHqtmU5LpldHIAWK'),
+('hamzh' , 'email-2', '$2b$10$Wd6z3MztpFbqZ5V8a0v8AeZUoWK6tYS7jG4PfcHqtmU5LpldHIAWK'),
 ('ali' , 'email-3', '$2b$10$Wd6z3MztpFbqZ5V8a0v8AeZUoWK6tYS7jG4PfcHqtmU5LpldHIAWK'),
 ('naeem' , 'email-3', '$2b$10$Wd6z3MztpFbqZ5V8a0v8AeZUoWK6tYS7jG4PfcHqtmU5LpldHIAWK'),
 ('mahmoud' , 'email-3', '$2b$10$Wd6z3MztpFbqZ5V8a0v8AeZUoWK6tYS7jG4PfcHqtmU5LpldHIAWK');

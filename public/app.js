@@ -3,7 +3,7 @@
 const options = {
     transports: ['websocket'],
 };
-const socket = io('localhost:3000/', options);
+const socket = io('https://chatech.herokuapp.com', options);
 
 socket.on('renderMsg', (payload) => {
     console.log(payload)

@@ -221,6 +221,7 @@ function select_chat_room(request, response) {
 
   //---------$$-------- edit chat rooms -------------------------
   const sqlQuery = `SELECT * FROM rooms ORDER BY roomid DESC;`;
+  console.log(1)
   pool.query(sqlQuery).then(data => {
     const list_room = data.rows;
 
@@ -229,6 +230,7 @@ function select_chat_room(request, response) {
     const safeValues = [room_id];
     const sqlQuery = "SELECT * FROM participants INNER JOIN messages ON participants.participantid=messages.participantid WHERE messages.roomid=$1;";
     // const sqlQuery = "SELECT * FROM messages INNER JOIN participants ON participants.participantid=messages.participantid WHERE messages.roomid=$1;";
+    console.log(2)
 
     function sort1(a, b) {
       if (a.messageid > b.messageid) {
@@ -241,6 +243,7 @@ function select_chat_room(request, response) {
     }
 
     
+    console.log(3)
 
     pool.query(sqlQuery, safeValues).then(massages => {
       const array = massages.rows;

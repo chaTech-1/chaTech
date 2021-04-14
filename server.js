@@ -24,10 +24,10 @@ const client = new pg.Client(DATABASE_URL);
 // pool
 const Pool = require("pg").Pool;
 const pool = new pg.Pool({
-  user: "aseelalzweri",
-  host: "localhost",
-  database: "chatapp",
-  password: "SoftDev5060",
+  user: "bwsdazcptpcqvz",
+  host: "ec2-52-50-171-4.eu-west-1.compute.amazonaws.com",
+  database: "d168avh50dh46i",
+  password: "97bd5223b47e89854e9b3fa66af1dfe0f090c9b7994c5e20a0f6b5c6936562ba",
   port: 5432,
 });
 
@@ -197,10 +197,10 @@ function participantInfoHandler(request, response) {
 function new_message(request, response) {
   const date = new Date().toLocaleTimeString("en-US");
   const { participantid, room_id, message } = request.body;
-  console.log('????????????', participantid, room_id, message,request.body)
+  console.log('????????????', participantid, room_id, message, request.body)
   const sqlQuery = "INSERT INTO messages (messagebody , roomid ,participantid,time) VALUES($1,$2,$3,$4)"
   const safeValues = [message, room_id, participantid, date];
-console.log(  safeValues)
+  console.log(safeValues)
   pool.query(sqlQuery, safeValues).then(element => {
     select_chat_room(request, response);
   }).catch(error => {
@@ -220,10 +220,11 @@ function select_chat_room(request, response) {
   // ----- send user-name to chat room ------------  
 
   //---------$$-------- edit chat rooms -------------------------
-  const sqlQuery = `SELECT * FROM rooms ORDER BY roomid DESC;`;
+  const sqlQuery = "SELECT * FROM rooms;";
+  console.log(1, sqlQuery)
   pool.query(sqlQuery).then(data => {
+    console.log(2)
     const list_room = data.rows;
-
 
     // &&&&&&&&&&&&&&&&& GET room 1 messages &&&&&&&&
     const safeValues = [room_id];
@@ -240,7 +241,8 @@ function select_chat_room(request, response) {
       return 0;
     }
 
-    
+
+    console.log(3)
 
     pool.query(sqlQuery, safeValues).then(massages => {
       const array = massages.rows;
@@ -252,6 +254,7 @@ function select_chat_room(request, response) {
     // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
   }).catch(error => {
+    console.log(error.message)
     errorHandler(error, response);
   });
   // response.render('../views/test', { key: list_room});

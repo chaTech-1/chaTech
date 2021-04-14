@@ -51,7 +51,7 @@
 
               <p id="chatroom-nav-header">chat room nav</p>
                 <% list_room.forEach(element=>{ %>
-                    <form action="chatrooms" method="post" id="select_room" onsubmit="join(event,<%= element.roomid %>)">
+                    <form action="chatrooms" method="post" id="select_room">
                         <input hidden type="text" name="room_id" value="<%= element.roomid %>">
                         <input hidden type="text" name="user" value="<%= user %>">
                         <input hidden type="text" name="participantid" value="<%= participantid %>">

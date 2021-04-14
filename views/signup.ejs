@@ -19,13 +19,13 @@
                 <p id="hero-text">Short One-Liner Here</p>
                 
 
-                <form id="sing_up" action="/sing_up" method="post">
+                <form id="sing_up" action="/check_signup" method="post">
                     <p><%= error_ms %></p>
-                    <input type="text" name="name" id="hero-section-name" placeholder="Your Name" required autocomplete="off" value="<%= name %>"><br>
-                    <input type="text" name="email" id="hero-section-name" placeholder="Your Email" required autocomplete="off" value="<%= email %>"><br>
-                    <input type="password" name="password" id="hero-section-name" placeholder="Your password" required autocomplete="off"><br>
-                    <input type="password" name="password" id="hero-section-name" placeholder="re-type password" required autocomplete="off"><br>
-                    <button type="submit">Let's Go</button>
+                    <input type="text" name="name" id="user_name_sign_up" placeholder="Your Name" required autocomplete="off" value="<%= name %>"><br>
+                    <input type="text" name="email" id="email_sign_up" placeholder="Your Email" required autocomplete="off" value="<%= email %>"><br>
+                    <input type="password" name="password" id="password1_sign_up" placeholder="Your password" required autocomplete="off" value=""><br>
+                    <input type="password" name="password2" id="password2_sign_up" placeholder="re-type password" required autocomplete="off" value=""><br>
+                    <button type="submit">SIGN UP</button>
                 </form>
 
             </section>

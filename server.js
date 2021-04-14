@@ -24,10 +24,10 @@ const client = new pg.Client(DATABASE_URL);
 // pool
 const Pool = require("pg").Pool;
 const pool = new pg.Pool({
-  user: "aseelalzweri",
+  user: "hamzh",
   host: "localhost",
-  database: "chatapp",
-  password: "SoftDev5060",
+  database: "chat8",
+  password: "123456",
   port: 5432,
 });
 
@@ -71,6 +71,7 @@ app.get('/', renderhome);
 app.post('/', participantInfoHandler);
 app.get('/about', renderAbout);
 app.get('/signup', signup);
+app.post('/check_signup', check_signup);
 app.get('/signin', renderSignin)
 app.post('/signin', handlerAdminSignin);
 app.get('/dashboard', renderDashboard);
@@ -86,7 +87,7 @@ app.post('/chatrooms2', new_message);
 
 
 function signup(request, response) {
-  response.render('../views/signup', { name: '', email: '', error_ms: '555' })
+  response.render('../views/signup', { name: '', email: '', error_ms: '' })
 }
 
 // Call-Back Functions
@@ -135,6 +136,44 @@ function test_fun(req, res) {
 
 // ***********************************************
 
+// SIGN UP HANDLER
+
+function check_signup(request, response) {
+  const { name, email, password, password2 } = request.body;
+  
+  // condition 1 ; check passwords
+  if (password != password2) {
+    response.render('../views/signup', { name: name, email: email, error_ms: 'Those passwords didn’t match. Try again' })
+  } else {
+
+    // condition 2 ; check user name is already taken or not
+    const safeValues1 = [name];
+    const sqlQuery = "SELECT * FROM participants WHERE name=$1"
+
+    client.query(sqlQuery, safeValues1).then(item => {
+
+      if (item.rows.length) {
+        response.render('../views/signup', { name: name, email: email, error_ms: 'That username is taken . Try again' })
+      }
+
+
+      const safeValues = [name, email, password];
+      const sqlQuery = "INSERT INTO participants (name,email,password) VALUES ($1 , $2 , $3 );"
+
+      client.query(sqlQuery, safeValues).then(data => {
+        response.redirect('/');
+        // response.render('../views/test', { key: 'Inserted successfully' });
+      }).catch(error => {
+        response.render('../views/test', { key: error });
+      })
+
+      // response.render('../views/test', { key: 'error' });
+    }).catch(error => {
+      response.render('../views/test', { key: error });
+    })
+  }
+}
+
 // Participant
 
 function participantInfoHandler(request, response) {
@@ -152,7 +191,11 @@ function participantInfoHandler(request, response) {
       const sql_password = data.rows[0].password;
 
       // ----- check password ------------
-      const check = bcrypt.compareSync(password, sql_password);
+      let check = bcrypt.compareSync(password, sql_password);
+
+      if (sql_password===password){
+        check=true;
+      }
 
       if (check) {
         //---------$$-------- edit chat rooms -------------------------
@@ -197,10 +240,10 @@ function participantInfoHandler(request, response) {
 function new_message(request, response) {
   const date = new Date().toLocaleTimeString("en-US");
   const { participantid, room_id, message } = request.body;
-  console.log('????????????', participantid, room_id, message,request.body)
+  console.log('????????????', participantid, room_id, message, request.body)
   const sqlQuery = "INSERT INTO messages (messagebody , roomid ,participantid,time) VALUES($1,$2,$3,$4)"
   const safeValues = [message, room_id, participantid, date];
-console.log(  safeValues)
+  console.log(safeValues)
   pool.query(sqlQuery, safeValues).then(element => {
     select_chat_room(request, response);
   }).catch(error => {
@@ -240,7 +283,7 @@ function select_chat_room(request, response) {
       return 0;
     }
 
-    
+
 
     pool.query(sqlQuery, safeValues).then(massages => {
       const array = massages.rows;
@@ -271,7 +314,7 @@ function select_chat_room(request, response) {
 function handlerAdminSignin(request, response) {
 
   const enteredPassword = request.body.password;
-
+  
   const safeValues = [request.body.username];
   const sqlQuery = `SELECT password FROM admins WHERE name=$1;`;
 

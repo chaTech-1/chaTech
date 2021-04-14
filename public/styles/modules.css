@@ -624,4 +624,6 @@ h2:active {
   ::-webkit-scrollbar-thumb:hover {
     background: var(--darker); 
   }
+
 }
+

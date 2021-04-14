@@ -21,11 +21,13 @@
 
                 <form id="sing_up" action="/check_signup" method="post">
                     <p><%= error_ms %></p>
-                    <input type="text" name="name" id="hero-section-name" placeholder="Your Name" required autocomplete="off" value="<%= name %>" class="signupInput"><br>
+
+                    <input type="text" name="name" id="hero-section-name" placeholder="Your Name" required autocomplete="off" value="<%= name %>"   class="signupInput"><br>
                     <input type="text" name="email" id="hero-section-name" placeholder="Your Email" required autocomplete="off" value="<%= email %>" class="signupInput"><br>
-                    <input type="password" name="password" id="hero-section-name" placeholder="Your password" required autocomplete="off" value="" class="signupInput"><br>
-                    <input type="password" name="password2" id="hero-section-name" placeholder="re-type password" required autocomplete="off" value="" class="signupInput"><br>
-                    <button type="submit" class="signupInput-button" >SIGN UP</button>
+                    <input type="password" name="password" id="hero-section-name" placeholder="Your password" required autocomplete="off" class="signupInput"><br>
+                    <input type="password" name="password" id="hero-section-name" placeholder="re-type password" required autocomplete="off" class="signupInput"><br>
+                    <button type="submit" class="signupInput-button">Let's Go</button>
+
                 </form>
 
             </section>

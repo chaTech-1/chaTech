@@ -55,7 +55,9 @@
                         <input hidden type="text" name="room_id" value="<%= element.roomid %>">
                         <input hidden type="text" name="user" value="<%= user %>">
                         <input hidden type="text" name="participantid" value="<%= participantid %>">
-                                <% if(element.roomid==room_id){%>
+
+                        <% if(element.roomid==room_id){%>
+
                         <button  class="chatroom-name2" type="submit"><%= element.name %></button>
                         <%}else{ %>
                             <button  class="chatroom-name" type="submit"><%= element.name %></button>

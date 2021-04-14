@@ -24,10 +24,10 @@ const client = new pg.Client(DATABASE_URL);
 // pool
 const Pool = require("pg").Pool;
 const pool = new pg.Pool({
-  user: "hamzh",
-  host: "localhost",
-  database: "chat8",
-  password: "123456",
+  user: "bwsdazcptpcqvz",
+  host: "ec2-52-50-171-4.eu-west-1.compute.amazonaws.com",
+  database: "d168avh50dh46i",
+  password: "97bd5223b47e89854e9b3fa66af1dfe0f090c9b7994c5e20a0f6b5c6936562ba",
   port: 5432,
 });
 
@@ -259,10 +259,11 @@ function select_chat_room(request, response) {
   // ----- send user-name to chat room ------------  
 
   //---------$$-------- edit chat rooms -------------------------
-  const sqlQuery = `SELECT * FROM rooms ORDER BY roomid DESC;`;
+  const sqlQuery = "SELECT * FROM rooms;";
+  console.log(1, sqlQuery)
   pool.query(sqlQuery).then(data => {
+    console.log(2)
     const list_room = data.rows;
-
 
     // &&&&&&&&&&&&&&&&& GET room 1 messages &&&&&&&&
     const safeValues = [room_id];
@@ -281,6 +282,9 @@ function select_chat_room(request, response) {
 
 
 
+    console.log(3)
+
+
     pool.query(sqlQuery, safeValues).then(massages => {
       const array = massages.rows;
       const massages2 = array.sort(sort1);
@@ -291,6 +295,7 @@ function select_chat_room(request, response) {
     // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
   }).catch(error => {
+    console.log(error.message)
     errorHandler(error, response);
   });
   // response.render('../views/test', { key: list_room});

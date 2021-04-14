@@ -3,7 +3,7 @@
 const options = {
     transports: ['websocket'],
 };
-const socket = io('localhost:3000/', options);
+const socket = io('https://chatech.herokuapp.com', options);
 
 socket.on('renderMsg', (payload) => {
     console.log(payload)
@@ -17,6 +17,7 @@ socket.on('renderMsg', (payload) => {
         <span class="retrieved-message-time">${payload.date}</span>
     `
     cont.appendChild(p);
+    cont.scrollTop =  cont.scrollHeight;
 })
 
 function join(e, id) {
@@ -46,6 +47,6 @@ async function send(e) {
     //     <span class="retrieved-message-body"><%= massage.messagebody %></span>
     //     <span class="retrieved-message-time"><%= massage.time %></span>
     // </p>
-     const textbox = document.getElementById('message').value = "";
-
+     document.getElementById('message').value = "";
+     document.getElementById('message').focus();
 }

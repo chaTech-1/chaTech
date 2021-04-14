@@ -131,7 +131,7 @@
 
 #previous-chatrooms-dashboard {
     width: 100%;
-    height: 80%;
+    height: 70%;
     padding: 1rem;
     overflow: auto;
 }
@@ -624,4 +624,6 @@ h2:active {
   ::-webkit-scrollbar-thumb:hover {
     background: var(--darker); 
   }
+
 }
+

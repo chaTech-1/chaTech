@@ -42,7 +42,7 @@
                     <input name="room_id" type="hidden" value='<%= room_id %>'>
                     <input name="participantid" type="hidden" value='<%= participantid %>'>
     
-                    <textarea name="message" id="message" placeholder="Type here baleez..." required
+                    <textarea name="message" id="message" placeholder="Type your message..." required
                         autocomplete="off"></textarea>
                     <button  id = "sendButton" type="submit">send</button>
                 </form>
@@ -51,11 +51,13 @@
 
               <p id="chatroom-nav-header">chat room nav</p>
                 <% list_room.forEach(element=>{ %>
-                    <form action="chatrooms" method="post" id="select_room" onsubmit="join(event,<%= element.roomid %>)">
+                    <form action="chatrooms" method="post" id="select_room">
                         <input hidden type="text" name="room_id" value="<%= element.roomid %>">
                         <input hidden type="text" name="user" value="<%= user %>">
                         <input hidden type="text" name="participantid" value="<%= participantid %>">
+
                         <% if(element.roomid==room_id){%>
+
                         <button  class="chatroom-name2" type="submit"><%= element.name %></button>
                         <%}else{ %>
                             <button  class="chatroom-name" type="submit"><%= element.name %></button>
@@ -65,9 +67,8 @@
 
             </section>
             <section id="tbd">
-                <p>TBD</p>
                 <p><%= user %></p>
-                <p><%= participantid %></p>
+                <!-- <p><%= participantid %></p> -->
             </section>
 
 

@@ -23,11 +23,18 @@ const client = new pg.Client(DATABASE_URL);
 
 // pool
 const Pool = require("pg").Pool;
+// const pool = new pg.Pool({
+//   user: "bwsdazcptpcqvz",
+//   host: "ec2-52-50-171-4.eu-west-1.compute.amazonaws.com",
+//   database: "d168avh50dh46i",
+//   password: "97bd5223b47e89854e9b3fa66af1dfe0f090c9b7994c5e20a0f6b5c6936562ba",
+//   port: 5432,
+// });
 const pool = new pg.Pool({
-  user: "bwsdazcptpcqvz",
-  host: "ec2-52-50-171-4.eu-west-1.compute.amazonaws.com",
-  database: "d168avh50dh46i",
-  password: "97bd5223b47e89854e9b3fa66af1dfe0f090c9b7994c5e20a0f6b5c6936562ba",
+  user: "alibaker",
+  host: "localhost",
+  database: "chatech",
+  password: "d3shdashe",
   port: 5432,
 });
 

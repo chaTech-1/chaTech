@@ -33,15 +33,16 @@
                 <li><a href="/signup" class="nav-links" action="/signup" method="get">Sign up</a></li>
 
                 <!-- Chatrooms Nav Inside Burger Menu -->
+                <p id="chatroom-nav-header" class="nav-links nav-links-header">chatrooms</p>
                 <% list_room.forEach(element=>{ %>
-                  <form action="chatrooms" method="post" id="select_room">
+                  <form action="chatrooms" method="post" id="select_room" class="select-room-burger-menu-form">
                       <input hidden type="text" name="room_id" value="<%= element.roomid %>">
                       <input hidden type="text" name="user" value="<%= user %>">
                       <input hidden type="text" name="participantid" value="<%= participantid %>">
                               <% if(element.roomid==room_id){%>
-                      <button  class="nav-links-chatroom-active" type="submit"><%= element.name %></button>
+                      <button  class="nav-links nav-links-chatroom-active" type="submit"><%= element.name %></button>
                       <%}else{ %>
-                          <button  class="nav-links-chatroom" type="submit"><%= element.name %></button>
+                          <button  class="nav-links nav-links-chatroom" type="submit"><%= element.name %></button>
                           <%}%>
                   </form>
               <% }) %>

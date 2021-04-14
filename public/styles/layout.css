@@ -43,7 +43,28 @@ header {
       flex-direction: column;
       justify-content: space-evenly;
       font-size: 1.25rem;
+      overflow: auto;
     }
+      .nav-links {
+        font-family: vt323;
+        font-size: 1rem;
+        color: var(--blue);
+      }
+      .nav-links-header {
+        background-color: var(--blue);
+        color: var(--dark);
+      }
+      .nav-links-chatroom {
+        border: none;
+        cursor: pointer;
+        background-color: var(--blue);
+        color: var(--dark);
+      }
+      .nav-links-chatroom-active {
+        border: none;
+        cursor: pointer;
+        background-color: var(--purple);
+      }
 
 @media screen and (min-width: 1024px) {
 

@@ -225,7 +225,8 @@ function participantInfoHandler(request, response) {
 
 
     else {
-      response.status(200).send('user-name is incorrect !!')
+      response.render('../views/index2', { err: 'User-name or password is incorrect !!' });
+      // response.status(200).send('user-name is incorrect !!')
     }
   }).catch((error) => {
     errorHandler(error, response)
